@@ -1,0 +1,113 @@
+.book-list-container {
+    padding-top: 20px;
+
+    transition: background-color 0.3s ease;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.dark-mode .book-list-container {
+
+}
+
+.header {
+    text-align: center;
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #3f51b5;
+    color: #fff;
+    border-bottom: 4px solid #303f9f;
+}
+
+.header-title {
+    font-size: 36px;
+    font-weight: bold;
+}
+.overlay-container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+.add-book-overlay,
+.search-overlay {
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    padding: 10px;
+    margin: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.add-book-overlay:hover,
+.search-overlay:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+.add-book-button {
+    margin-left: 20px;
+    border-radius: 25px;
+}
+
+.add-book-button:hover {
+    background-color: #303f9f;
+}
+
+.search-box {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.search-field {
+    background-color: #fff;
+    border-radius: 25px;
+}
+
+.book-card {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: #fff;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+}
+
+.dark-mode .book-card {
+
+    color: black;
+
+}
+
+.book-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.32);
+}
+
+.card-media {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.card-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.card-author {
+    font-size: 16px;
+    color: #757575;
+    margin-bottom: 5px;
+}
+
+.delete-button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: #fff;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+}
+
+.delete-button:hover {
+    background-color: #e0e0e0;
+}
