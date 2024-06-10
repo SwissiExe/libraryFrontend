@@ -7,15 +7,16 @@ import {
     Typography,
     Box,
     Button,
-    Card,
+    Card as MuiCard,
     CardContent,
     CardMedia,
     Grid,
     Paper,
-    useTheme,
-    useMediaQuery,
     Menu,
     MenuItem,
+    FormGroup,
+    FormControlLabel,
+    Checkbox
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
@@ -23,7 +24,6 @@ import SearchIcon from '@mui/icons-material/Search';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useNavigate } from 'react-router-dom';
 import './BookList.css';
-import NavigationMenu from "./NavigationMenu"; // Import custom CSS for additional styling
 
 const BookList: React.FC = () => {
     const [books, setBooks] = useState<Book[]>([]);
@@ -31,8 +31,6 @@ const BookList: React.FC = () => {
     const [filteredBooks, setFilteredBooks] = useState<Book[]>([]);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const navigate = useNavigate();
-    const theme = useTheme();
-    const isDarkMode = useMediaQuery(theme.breakpoints.up('sm'));
 
     useEffect(() => {
         loadBooks();
@@ -83,47 +81,48 @@ const BookList: React.FC = () => {
         setAnchorEl(null);
     };
 
-    return (
-        <Container>
-            <Paper className="header" elevation={3}>
+    const Card: React.FC<{
+        title: string;
+        description: string;
+        author: string;
+        pages: number;
+        img: string;
+    }> = ({ title, description, author, img }) => (
+        <MuiCard className="card">
+            <CardMedia
+                component="img"
+                height="200"
+                image={img}
+                alt={title}
+                className="card__image"
+            />
+            <div className="card__overlay">
+                <div className="card__header">
+                    <div className="card__header-text">
+                        <Typography variant="h6" className="card__title">
+                            {title}
+                        </Typography>
+                        <Typography variant="body2" className="card__author">
+                            {author}
+                        </Typography>
+                    </div>
+                </div>
+                <CardContent>
+                    <Typography variant="body2" color="textSecondary" component="p" className="card__description">
+                        {description}
+                    </Typography>
+                </CardContent>
+            </div>
+        </MuiCard>
+    );
 
+    return (
+        <div className="container">
                 <Typography variant="h3" className="header-title" gutterBottom>
                     Library Management
                 </Typography>
-                <IconButton
-                    aria-controls="menu"
-                    aria-haspopup="true"
-                    onClick={handleClick}
-                    color="inherit"
-                    size="large"
-                >
-                    <MoreVertIcon />
-                </IconButton>
-                <Menu
-                    id="menu"
-                    anchorEl={anchorEl}
-                    open={Boolean(anchorEl)}
-                    onClose={handleClose}
+           
 
-                    anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'right',
-                    }}
-                    transformOrigin={{
-                        vertical: 'top',
-                        horizontal: 'right',
-                    }}
-                >
-                    <MenuItem onClick={handleAddBookClick}>
-                        <AddIcon sx={{ mr: 1 }} />
-                        Add Book
-                    </MenuItem>
-                    <MenuItem onClick={handleSearchClick}>
-                        <SearchIcon sx={{ mr: 1 }} />
-                        Search Books
-                    </MenuItem>
-                </Menu>
-            </Paper>
             <Box my={4} className="search-box">
                 <TextField
                     label="Search by Title or Author"
@@ -132,45 +131,58 @@ const BookList: React.FC = () => {
                     value={searchQuery}
                     onChange={e => setSearchQuery(e.target.value)}
                     className="search-field"
+                    color="primary"
                 />
             </Box>
-            <Grid container spacing={4}>
-                {filteredBooks.map(book => (
-                    <Grid item key={book.id} xs={12} sm={6} md={4}>
-                        <Card
-                            className={`book-card ${isDarkMode ? 'dark-mode' : ''}`}
-                            onClick={() => handleBookClick(book.id)}
-                        >
-                            <CardMedia
-                                component="img"
-                                height="200"
-                                image={book.img}
-                                alt={book.title}
-                                className="card-media"
-                            />
-                            <CardContent>
-                                <Typography variant="h6" className="card-title" gutterBottom>
-                                    {book.title}
-                                </Typography>
-                                <Typography variant="body2" color="textSecondary" className="card-author">
-                                    {book.author}
-                                </Typography>
-                            </CardContent>
-                            <IconButton
-                                edge="end"
-                                className={`delete-button ${isDarkMode ? 'dark-mode' : ''}`}
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleDelete(book.id);
-                                }}
-                            >
-                                <DeleteIcon />
-                            </IconButton>
-                        </Card>
+            <div className="content">
+                <div className="filter-menu">
+                        <Typography variant="h6" gutterBottom>
+                            Type
+                        </Typography>
+                        <FormGroup>
+                            <FormControlLabel control={<Checkbox />} label="Gift" />
+                            <FormControlLabel control={<Checkbox />} label="Indoor" />
+                            <FormControlLabel control={<Checkbox />} label="Outdoor" />
+                        </FormGroup>
+                        <Typography variant="h6" gutterBottom>
+                            Size
+                        </Typography>
+                        <FormGroup>
+                            <FormControlLabel control={<Checkbox defaultChecked />} label="Small" />
+                            <FormControlLabel control={<Checkbox defaultChecked />} label="Medium" />
+                            <FormControlLabel control={<Checkbox defaultChecked />} label="Large" />
+                        </FormGroup>
+
+                </div>
+                <div className="cards-container">
+                    <Grid container spacing={4}>
+                        {filteredBooks.map(book => (
+                            <Grid item key={book.id} xs={12} sm={6} md={4}>
+                                <a href="" className={`card`} onClick={() => handleBookClick(book.id)}>
+                                    <Card
+                                        title={book.title}
+                                        description={book.description}
+                                        author={book.author}
+                                        img={book.img}
+                                        pages={book.pages}
+                                    />
+                                    <IconButton
+                                        edge="end"
+                                        className={`delete-button`}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleDelete(book.id);
+                                        }}
+                                    >
+                                        <DeleteIcon />
+                                    </IconButton>
+                                </a>
+                            </Grid>
+                        ))}
                     </Grid>
-                ))}
-            </Grid>
-        </Container>
+                </div>
+            </div>
+        </div>
     );
 };
 

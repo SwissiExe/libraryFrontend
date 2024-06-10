@@ -1,64 +1,44 @@
-.book-list-container {
-    padding-top: 20px;
-
-    transition: background-color 0.3s ease;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+/* BookList.css */
+:root {
+    --surface-color: #fff;
+    --curve: 40;
 }
 
-.dark-mode .book-list-container {
+* {
+    box-sizing: border-box;
+}
 
+body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background-color: #fef8f8;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
 }
 
 .header {
-    text-align: center;
-    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
     margin-bottom: 20px;
-    background-color: #3f51b5;
-    color: #fff;
-    border-bottom: 4px solid #303f9f;
-}
-
-.header-title {
-    font-size: 36px;
-    font-weight: bold;
-}
-.overlay-container {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-}
-
-.add-book-overlay,
-.search-overlay {
-    background-color: rgba(255, 255, 255, 0.5);
-    border-radius: 50%;
-    padding: 10px;
-    margin: 5px;
-    transition: background-color 0.3s ease;
-}
-
-.add-book-overlay:hover,
-.search-overlay:hover {
-    background-color: rgba(255, 255, 255, 0.8);
-}
-
-.add-book-button {
-    margin-left: 20px;
-    border-radius: 25px;
-}
-
-.add-book-button:hover {
-    background-color: #303f9f;
 }
 
 .search-box {
     margin-bottom: 20px;
-    text-align: center;
 }
 
-.search-field {
-    background-color: #fff;
-    border-radius: 25px;
+.content {
+    display: flex;
+    flex: 1;
 }
 
 .book-card {
@@ -67,35 +47,24 @@
     overflow: hidden;
     cursor: pointer;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    background-color: #fff;
-    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
 }
 
-.dark-mode .book-card {
-
-    color: black;
-
+@media (min-width: 1200px) {
+    .css-1oqqzyl-MuiContainer-root {
+        max-width: 5000px;
+    }
 }
 
-.book-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.32);
-}
-
-.card-media {
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-}
-
-.card-title {
+.card__title {
     font-size: 20px;
     font-weight: bold;
     margin-bottom: 10px;
+    color: #ffffff; /* Dark Mode Text Color */
 }
 
-.card-author {
+.card__author {
     font-size: 16px;
-    color: #757575;
+    color: #bdbdbd; /* Dark Mode Author Text Color */
     margin-bottom: 5px;
 }
 
@@ -103,11 +72,211 @@
     position: absolute;
     top: 5px;
     right: 5px;
-    background-color: #fff;
+    background-color: #212121; /* Dark Mode Button Background */
     border-radius: 50%;
     transition: background-color 0.3s ease;
 }
 
 .delete-button:hover {
-    background-color: #e0e0e0;
+    background-color: #333333; /* Dark Mode Button Hover Background */
 }
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin: 4rem 5vw;
+    padding: 0;
+    list-style-type: none;
+}
+
+.card {
+    position: relative;
+    display: block;
+    width: 275px;
+    height: 100%;
+    border-radius: calc(var(--curve) * 1px);
+    overflow: hidden;
+    text-decoration: none;
+}
+
+.card__image {
+    width: 100%;
+    height: auto;
+}
+
+.card__overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    border-radius: calc(var(--curve) * 1px);
+    background-color: var(--surface-color);
+    transform: translateY(100%);
+    transition: .2s ease-in-out;
+}
+
+.card:hover .card__overlay {
+    transform: translateY(0);
+}
+
+.card__header {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 2em;
+    padding: 2em;
+    border-radius: calc(var(--curve) * 1px) 0 0 0;
+    background-color: var(--surface-color);
+    transform: translateY(-100%);
+    transition: .2s ease-in-out;
+}
+
+.card__arc {
+    width: 80px;
+    height: 80px;
+    position: absolute;
+    bottom: 100%;
+    right: 0;
+    z-index: 1;
+}
+
+.card__arc path {
+    fill: var(--surface-color);
+    d: path("M 40 80 c 22 0 40 -22 40 -40 v 40 Z");
+}
+
+.card:hover .card__header {
+    transform: translateY(0);
+}
+
+.card__thumb {
+    flex-shrink: 0;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.card__title {
+    font-size: 1em;
+    margin: 0 0 .3em;
+    color: #6A515E;
+}
+
+.card__tagline {
+    display: block;
+    margin: 1em 0;
+    font-family: "MockFlowFont";
+    font-size: .8em;
+    color: #D7BDCA;
+}
+
+.card__status {
+    font-size: .8em;
+    color: #D7BDCA;
+}
+
+.card__description {
+    padding: 0 2em 2em;
+    margin: 0;
+    color: #D7BDCA;
+    font-family: "MockFlowFont";
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+}
+
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+}
+
+
+.filter-menu {
+    width: 300px;
+    margin-right: 20px;
+    background-color: transparent;
+}
+
+.filter-paper {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+
+    border-radius: 8px;
+
+}
+
+
+.cards-container {
+    flex: 1;
+}
+
+.card {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card__overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    border-radius: calc(var(--curve) * 1px);
+    background-color: var(--surface-color);
+    transform: translateY(100%);
+    transition: .2s ease-in-out;
+}
+
+.card:hover .card__overlay {
+    transform: translateY(0);
+}
+
+.card:hover .card__overlay {
+    transform: translateY(0);
+}
+
+.card__header {
+    display: flex;
+    align-items: center;
+    gap: 2em;
+    padding: 2em;
+}
+
+.card__title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.card__author {
+    font-size: 16px;
+    color: #777;
+    margin-bottom: 5px;
+}
+
+.delete-button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: #ff0000;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+}
+
+.delete-button:hover {
+    background-color: #cc0000;
+}
+
