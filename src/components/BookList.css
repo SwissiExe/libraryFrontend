@@ -87,12 +87,12 @@ input {
 }
 
 .filter-menu {
+    overflow: hidden;
     width: 300px;
     margin-right: 20px;
     background-color: var(--surface-color);
     padding: 20px;
     border-radius: var(--curve);
-    overflow-y: auto; /* Ensure filter menu scrolls if it overflows */
 }
 
 .card__title {
