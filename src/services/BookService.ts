@@ -5,13 +5,22 @@ export interface Book {
     author: string;
     pages: number;
     img: string;
+    genres: string;
+    releasedate: Date;
 }
 
 const API_URL = 'http://localhost:8080/api';
 
+
 export const getAllBooks = async (): Promise<Book[]> => {
     const response = await fetch(`${API_URL}/get/books`);
-    return response.json();
+    const books: Book[] = await response.json();
+
+    // Convert releaseDate string to Date object
+    return books.map(book => ({
+        ...book,
+        releasedate: new Date(book.releasedate)
+    }));
 };
 
 export const getBookById = async (id: number): Promise<Book> => {

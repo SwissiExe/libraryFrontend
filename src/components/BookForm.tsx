@@ -1,146 +1,153 @@
-import React, { useEffect, useState } from 'react';
-import { getAllBooks, deleteBook, Book } from '../services/BookService';
+import React, { useState } from 'react';
 import {
     TextField,
-    IconButton,
+    Button,
     Container,
     Typography,
     Box,
-    Button,
-    Card,
-    CardContent,
-    CardMedia,
-    Grid,
     Paper,
-    useTheme,
-    useMediaQuery,
+    MenuItem
 } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import AddIcon from '@mui/icons-material/Add';
-import SearchIcon from '@mui/icons-material/Search';
 import { useNavigate } from 'react-router-dom';
-import './BookList.css'; // Import custom CSS for additional styling
+import { addBook } from '../services/BookService';
+import './BookForm.css';
 
-const BookList: React.FC = () => {
-    const [books, setBooks] = useState<Book[]>([]);
-    const [searchQuery, setSearchQuery] = useState<string>('');
-    const [filteredBooks, setFilteredBooks] = useState<Book[]>([]);
+const genres = [
+    'Fantasy',
+    'Krimi',
+    'Horror',
+    'Liebesroman',
+    'Science Fiction',
+    'Sachbuch'
+];
+
+const BookForm: React.FC = () => {
+    const [title, setTitle] = useState<string>('');
+    const [author, setAuthor] = useState<string>('');
+    const [description, setDescription] = useState<string>('');
+    const [pages, setPages] = useState<number>(0);
+    const [genre, setGenre] = useState<string>('');
+    const [img, setImg] = useState<string>('');
+    const [releasedate, setReleaseDate] = useState<string>('');
     const navigate = useNavigate();
-    const theme = useTheme();
-    const isDarkMode = useMediaQuery(theme.breakpoints.up('sm'));
 
-    useEffect(() => {
-        loadBooks();
-    }, []);
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
 
-    useEffect(() => {
-        filterBooks();
-    }, [searchQuery, books]);
+        // Convert releaseDate to a Date object
+        const releaseDateObj = new Date(releasedate);
+        console.log(releaseDateObj.getFullYear())
+        const newBook = {
+            id: 0,
+            title,
+            author,
+            description,
+            pages,
+            genres: genre,
+            img,
+            releasedate: releaseDateObj
+        };
 
-    const loadBooks = async () => {
-        const books = await getAllBooks();
-        setBooks(books);
-    };
-
-    const handleDelete = async (id: number) => {
-        await deleteBook(id);
-        loadBooks();
-    };
-
-    const filterBooks = () => {
-        const query = searchQuery.toLowerCase();
-        setFilteredBooks(
-            books.filter(book =>
-                book.title.toLowerCase().includes(query) ||
-                book.author.toLowerCase().includes(query)
-            )
-        );
-    };
-
-    const handleBookClick = (id: number) => {
-        navigate(`/book/${id}`);
-    };
-
-    const handleAddBookClick = () => {
-        navigate('/add-book');
-    };
-
-    const handleSearchClick = () => {
-        // Handle navigation to search page
-        navigate('/search');
+        await addBook(newBook);
+        navigate('/');
     };
 
     return (
-        <Container className={`book-list-container ${isDarkMode ? 'dark-mode' : ''}`}>
-            <Paper className="header" elevation={3}>
-                <Typography variant="h3" className="header-title" gutterBottom>
-                    Library Management
-                </Typography>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleAddBookClick}
-                    className="add-book-button"
-                >
+        <Container maxWidth="sm">
+            <Paper elevation={3} className="form-container">
+                <Typography variant="h4" gutterBottom>
                     Add New Book
-                </Button>
-            </Paper>
-            <Box my={4} className="search-box">
-                <TextField
-                    label="Search by Title or Author"
-                    variant="outlined"
-                    fullWidth
-                    value={searchQuery}
-                    onChange={e => setSearchQuery(e.target.value)}
-                    className="search-field"
-                />
-            </Box>
-            <Grid container spacing={4}>
-                {filteredBooks.map(book => (
-                    <Grid item key={book.id} xs={12} sm={6} md={4}>
-                        <Card
-                            className={`book-card ${isDarkMode ? 'dark-mode' : ''}`}
-                            onClick={() => handleBookClick(book.id)}
+                </Typography>
+                <form onSubmit={handleSubmit}>
+                    <TextField
+                        label="Title"
+                        variant="outlined"
+                        fullWidth
+                        margin="normal"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        required
+                    />
+                    <TextField
+                        label="Author"
+                        variant="outlined"
+                        fullWidth
+                        margin="normal"
+                        value={author}
+                        onChange={(e) => setAuthor(e.target.value)}
+                        required
+                    />
+                    <TextField
+                        label="Description"
+                        variant="outlined"
+                        fullWidth
+                        margin="normal"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        multiline
+                        rows={4}
+                    />
+                    <TextField
+                        label="Pages"
+                        variant="outlined"
+                        fullWidth
+                        margin="normal"
+                        type="number"
+                        value={pages}
+                        onChange={(e) => setPages(parseInt(e.target.value))}
+                        required
+                    />
+                    <TextField
+                        select
+                        label="Genre"
+                        variant="outlined"
+                        fullWidth
+                        margin="normal"
+                        value={genre}
+                        onChange={(e) => setGenre(e.target.value)}
+                        required
+                    >
+                        {genres.map((genre) => (
+                            <MenuItem key={genre} value={genre}>
+                                {genre}
+                            </MenuItem>
+                        ))}
+                    </TextField>
+                    <TextField
+                        label="Image URL"
+                        variant="outlined"
+                        fullWidth
+                        margin="normal"
+                        value={img}
+                        onChange={(e) => setImg(e.target.value)}
+                    />
+                    <TextField
+                        label="Release Date"
+                        variant="outlined"
+                        fullWidth
+                        margin="normal"
+                        type="date"
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        value={releasedate}
+                        onChange={(e) => setReleaseDate(e.target.value)}
+                        required
+                    />
+                    <Box mt={3}>
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            color="primary"
+                            fullWidth
                         >
-                            <CardMedia
-                                component="img"
-                                height="200"
-                                image={book.img}
-                                alt={book.title}
-                                className="card-media"
-                            />
-                            <CardContent>
-                                <Typography variant="h6" className="card-title" gutterBottom>
-                                    {book.title}
-                                </Typography>
-                                <Typography variant="body2" color="textSecondary" className="card-author">
-                                    {book.author}
-                                </Typography>
-                            </CardContent>
-                            <IconButton
-                                edge="end"
-                                className={`delete-button ${isDarkMode ? 'dark-mode' : ''}`}
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleDelete(book.id);
-                                }}
-                            >
-                                <DeleteIcon />
-                            </IconButton>
-                        </Card>
-                    </Grid>
-                ))}
-            </Grid>
-            <Box className="overlay-container">
-                <IconButton className="add-book-overlay" onClick={handleAddBookClick}>
-                    <AddIcon />
-                </IconButton>
-                <IconButton className="search-overlay" onClick={handleSearchClick}>
-                    <SearchIcon />
-                </IconButton>
-            </Box>
+                            Add Book
+                        </Button>
+                    </Box>
+                </form>
+            </Paper>
         </Container>
     );
 };
 
-export default BookList;
+export default BookForm;

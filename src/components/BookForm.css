@@ -1,0 +1,16 @@
+.form-container {
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.form-container .MuiTypography-root {
+    text-align: center;
+}
+
+.form-container .MuiTextField-root {
+    margin-bottom: 20px;
+}
+
+.form-container .MuiButton-root {
+    margin-top: 20px;
+}
