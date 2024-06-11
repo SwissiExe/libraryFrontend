@@ -157,14 +157,6 @@ const BookList: React.FC = () => {
         setReleaseRange(newValue as number[]);
     };
 
-    // Funktion zur Behandlung der Sortierungsoptionen
-    const handleSortChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-        setSortOption(event.target.value as string);
-    };
-
-    const sortOptions = ['Name', 'Date']; // Optionen für die Sortierung
-
-
 
     const loadMoreBooks = () => {
         if (visibleBooks.length >= filteredBooks.length) {
@@ -252,21 +244,6 @@ const BookList: React.FC = () => {
                         <path d="M8 14L8 20" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
                     </svg>
                 </Button>
-
-                <TextField
-                    select
-                    label="Sorted By"
-                    value={sortOption}
-                    onChange={handleSortChange}
-                    variant="outlined"
-                    className="sort-dropdown"
-                >
-                    {sortOptions.map(option => (
-                        <MenuItem key={option} value={option}>
-                            {option}
-                        </MenuItem>
-                    ))}
-                </TextField>
             </Box>
 
             <Box my={4} className="search-box">
