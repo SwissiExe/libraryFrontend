@@ -249,3 +249,12 @@ input {
 .sort-dropdown .MuiOutlinedInput-notchedOutline {
     border-color: var(--text-color);
 }
+.css-480o17-MuiGrid-root {
+    gap: 15px !important;
+}
+.MuiGrid-item {
+
+    max-width: 275px !important;
+
+
+}
