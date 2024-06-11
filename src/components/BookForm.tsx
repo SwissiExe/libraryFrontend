@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { addBook } from '../services/BookService';
 import {
-    TextField,
-    Button,
     Container,
     Typography,
     Box,
-    Paper,
-    MenuItem
+    Button,
+    TextField,
+    MenuItem,
+    Grid
 } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import { addBook } from '../services/BookService';
 import './BookForm.css';
 
 const genres = [
@@ -34,9 +34,7 @@ const BookForm: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        // Convert releaseDate to a Date object
         const releaseDateObj = new Date(releasedate);
-        console.log(releaseDateObj.getFullYear())
         const newBook = {
             id: 0,
             title,
@@ -53,100 +51,126 @@ const BookForm: React.FC = () => {
     };
 
     return (
-        <Container maxWidth="sm">
-            <Paper elevation={3} className="form-container">
-                <Typography variant="h4" gutterBottom>
-                    Add New Book
-                </Typography>
-                <form onSubmit={handleSubmit}>
-                    <TextField
-                        label="Title"
+        <div className="login-root">
+            <Container component="main" maxWidth="sm">
+                <Box className="Boxi" style={{ minHeight: '100vh', flexGrow: 1 }}>
+                    <Button
                         variant="outlined"
-                        fullWidth
-                        margin="normal"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        required
-                    />
-                    <TextField
-                        label="Author"
-                        variant="outlined"
-                        fullWidth
-                        margin="normal"
-                        value={author}
-                        onChange={(e) => setAuthor(e.target.value)}
-                        required
-                    />
-                    <TextField
-                        label="Description"
-                        variant="outlined"
-                        fullWidth
-                        margin="normal"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                        multiline
-                        rows={4}
-                    />
-                    <TextField
-                        label="Pages"
-                        variant="outlined"
-                        fullWidth
-                        margin="normal"
-                        type="number"
-                        value={pages}
-                        onChange={(e) => setPages(parseInt(e.target.value))}
-                        required
-                    />
-                    <TextField
-                        select
-                        label="Genre"
-                        variant="outlined"
-                        fullWidth
-                        margin="normal"
-                        value={genre}
-                        onChange={(e) => setGenre(e.target.value)}
-                        required
+                        color="secondary"
+                        onClick={() => navigate('/')}
+                        className="back-button"
                     >
-                        {genres.map((genre) => (
-                            <MenuItem key={genre} value={genre}>
-                                {genre}
-                            </MenuItem>
-                        ))}
-                    </TextField>
-                    <TextField
-                        label="Image URL"
-                        variant="outlined"
-                        fullWidth
-                        margin="normal"
-                        value={img}
-                        onChange={(e) => setImg(e.target.value)}
-                    />
-                    <TextField
-                        label="Release Date"
-                        variant="outlined"
-                        fullWidth
-                        margin="normal"
-                        type="date"
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                        value={releasedate}
-                        onChange={(e) => setReleaseDate(e.target.value)}
-                        required
-                    />
-                    <Box mt={3}>
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            color="primary"
-                            fullWidth
-                        >
-                            Add Book
-                        </Button>
+                        Back to Home
+                    </Button>
+                    <Box className="boxi-moxi">
+                        <Typography component="h1" variant="h5">
+                            Add New Book
+                        </Typography>
                     </Box>
-                </form>
-            </Paper>
-        </Container>
+                    <form className="formi" onSubmit={handleSubmit}>
+                        <Box className="book-container">
+                            <Box className="page left-page">
+                                <TextField
+                                    variant="outlined"
+                                    margin="normal"
+                                    required
+                                    fullWidth
+                                    id="title"
+                                    label="Title"
+                                    name="title"
+                                    autoFocus
+                                    value={title}
+                                    onChange={(e) => setTitle(e.target.value)}
+                                />
+                                <TextField
+                                    variant="outlined"
+                                    margin="normal"
+                                    required
+                                    fullWidth
+                                    id="author"
+                                    label="Author"
+                                    name="author"
+                                    value={author}
+                                    onChange={(e) => setAuthor(e.target.value)}
+                                />
+                                <TextField
+                                    variant="outlined"
+                                    margin="normal"
+                                    required
+                                    fullWidth
+                                    id="pages"
+                                    label="Pages"
+                                    name="pages"
+                                    type="number"
+                                    value={pages}
+                                    onChange={(e) => setPages(parseInt(e.target.value))}
+                                />
+                                <TextField
+                                    select
+                                    label="Genre"
+                                    variant="outlined"
+                                    fullWidth
+                                    margin="normal"
+                                    value={genre}
+                                    onChange={(e) => setGenre(e.target.value)}
+                                >
+                                    {genres.map((option) => (
+                                        <MenuItem key={option} value={option}>
+                                            {option}
+                                        </MenuItem>
+                                    ))}
+                                </TextField>
+                            </Box>
+                            <Box className="page right-page">
+                                <TextField
+                                    variant="outlined"
+                                    margin="normal"
+                                    required
+                                    fullWidth
+                                    id="description"
+                                    label="Description"
+                                    name="description"
+                                    multiline
+                                    rows={4}
+                                    value={description}
+                                    onChange={(e) => setDescription(e.target.value)}
+                                />
+                                <TextField
+                                    variant="outlined"
+                                    margin="normal"
+                                    required
+                                    fullWidth
+                                    id="img"
+                                    label="Image URL"
+                                    name="img"
+                                    value={img}
+                                    onChange={(e) => setImg(e.target.value)}
+                                />
+                                <TextField
+                                    variant="outlined"
+                                    margin="normal"
+                                    required
+                                    fullWidth
+                                    id="releasedate"
+                                    label="Release Date"
+                                    name="releasedate"
+                                    type="date"
+                                    InputLabelProps={{ shrink: true }}
+                                    value={releasedate}
+                                    onChange={(e) => setReleaseDate(e.target.value)}
+                                />
+                            </Box>
+                        </Box>
+                        <Grid className="butto-zone">
+                            <Button type="submit" variant="contained" color="primary">
+                                Add Book
+                            </Button>
+                        </Grid>
+                    </form>
+
+                </Box>
+            </Container>
+        </div>
     );
 };
 

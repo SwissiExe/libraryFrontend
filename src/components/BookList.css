@@ -1,20 +1,28 @@
-/* BookList.css */
 :root {
-    --surface-color: #fff;
-    --curve: 40;
+    --background-color: #1e1e2f;
+    --surface-color: #2d2d44;
+    --card-bg-color: #2b2b41;
+    --accent-color: #5c7cfa;
+    --text-color: #ffffff;
+    --secondary-text-color: #bdbdbd;
+    --curve: 20px;
 }
 
 * {
     box-sizing: border-box;
 }
 
-body {
+body, html {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
     font-family: 'Noto Sans JP', sans-serif;
-    background-color: #fef8f8;
+    background-color: var(--background-color);
+    color: var(--text-color);
 }
 
-html, body {
-    width: 100%;
+#root {
     height: 100%;
 }
 
@@ -22,6 +30,7 @@ html, body {
     display: flex;
     flex-direction: column;
     padding: 20px;
+    height: 100%;
 }
 
 .header {
@@ -32,92 +41,70 @@ html, body {
     margin-bottom: 20px;
 }
 
-.search-box {
-    margin-bottom: 20px;
+.header-title {
+    color: var(--text-color);
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+}
+
+.header-title span {
+    color: var(--accent-color);
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.search-field {
+    background-color: var(--surface-color);
+    border-radius: 8px;
+    width: 300px;
+}
+
+.add-book-button {
+    background-color: var(--accent-color);
+    color: var(--text-color);
+    border-radius: var(--curve);
+}
+
+.add-book-button:hover {
+    background-color: #3a58c8;
 }
 
 .content {
     display: flex;
     flex: 1;
-}
-
-.book-card {
-
-    position: relative;
-    border-radius: 10px;
+    height: calc(100% - 140px); /* Adjust height to account for header and padding */
     overflow: hidden;
-    cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-@media (min-width: 1200px) {
-    .css-1oqqzyl-MuiContainer-root {
-        max-width: 5000px;
-    }
+input {
+    border: 1px solid cornflowerblue !important;
+    border-radius: 10px;
 }
-
-.card__title {
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 10px;
-    color: #ffffff; /* Dark Mode Text Color */
-}
-
-.card__author {
-    font-size: 16px;
-    color: #bdbdbd; /* Dark Mode Author Text Color */
-    margin-bottom: 5px;
-}
-
-.delete-button {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    background-color: #212121; /* Dark Mode Button Background */
-    border-radius: 50%;
-    transition: background-color 0.3s ease;
-}
-
-.delete-button:hover {
-    background-color: #333333; /* Dark Mode Button Hover Background */
-}
-
-
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px;
-}
-
 
 .filter-menu {
     width: 300px;
     margin-right: 20px;
-    background-color: transparent;
-}
-
-.filter-paper {
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-
-
-    border-radius: 8px;
-
+    background-color: var(--surface-color);
+    padding: 20px;
+    border-radius: var(--curve);
+    overflow-y: auto; /* Ensure filter menu scrolls if it overflows */
 }
 
 .card__title {
     font-size: 20px;
     font-weight: bold;
     margin-bottom: 10px;
-    color: #ffffff; /* Dark Mode Text Color */
+    color: var(--text-color);
 }
 
 .card__author {
     font-size: 16px;
-    color: #bdbdbd; /* Dark Mode Author Text Color */
+    color: var(--secondary-text-color);
     margin-bottom: 5px;
 }
 
@@ -125,22 +112,31 @@ html, body {
     position: absolute;
     top: 5px;
     right: 5px;
-    background-color: #212121; /* Dark Mode Button Background */
+    background-color: #ff0000;
     border-radius: 50%;
     transition: background-color 0.3s ease;
 }
 
 .delete-button:hover {
-    background-color: #333333; /* Dark Mode Button Hover Background */
+    background-color: #cc0000;
+}
+
+.cards-container {
+    flex: 1;
+    overflow: scroll;
+    padding: 20px;
+    border-radius: var(--curve);
+}
+
+.cards-container.full-width {
+    width: 100%;
 }
 
 .cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 2rem;
-    margin: 4rem 5vw;
     padding: 0;
-    justify-content: space-around;
     list-style-type: none;
 }
 
@@ -150,21 +146,26 @@ html, body {
     width: 275px;
     height: 100%;
     min-width: 275px;
-    border-radius: calc(var(--curve) * 1px);
+    border-radius: var(--curve);
     overflow: hidden;
     text-decoration: none;
+    background-color: var(--surface-color) !important;
+    color: var(--text-color);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-.boss-con {
 
+.card:hover {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.boss-con {
     max-width: 275px;
     min-width: 275px;
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;
 }
-.conny-ponny {
-    justify-content: space-around;
-}
+
 .card__image {
     width: 100%;
     height: auto;
@@ -176,7 +177,7 @@ html, body {
     left: 0;
     right: 0;
     z-index: 1;
-    border-radius: calc(var(--curve) * 1px);
+    border-radius: var(--curve);
     background-color: var(--surface-color);
     transform: translateY(100%);
     transition: .2s ease-in-out;
@@ -192,101 +193,59 @@ html, body {
     align-items: center;
     gap: 2em;
     padding: 2em;
-    border-radius: calc(var(--curve) * 1px) 0 0 0;
+    border-radius: var(--curve) 0 0 0;
     background-color: var(--surface-color);
     transform: translateY(-100%);
     transition: .2s ease-in-out;
 }
 
-.card__arc {
-    width: 80px;
-    height: 80px;
-    position: absolute;
-    bottom: 100%;
-    right: 0;
-    z-index: 1;
-}
-
-.card__arc path {
-    fill: var(--surface-color);
-    d: path("M 40 80 c 22 0 40 -22 40 -40 v 40 Z");
+.card__header__header {
+    background-color: var(--surface-color);
 }
 
 .card:hover .card__header {
     transform: translateY(0);
 }
 
-.card__thumb {
-    flex-shrink: 0;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-}
-
-.card__title {
-    font-size: 1em;
-    margin: 0 0 .3em;
-    color: #6A515E;
-}
-
-.card__tagline {
-    display: block;
-    margin: 1em 0;
-    font-family: "MockFlowFont";
-    font-size: .8em;
-    color: #D7BDCA;
-}
-
-.card__status {
-    font-size: .8em;
-    color: #D7BDCA;
-}
-
-.card__description {
-    padding: 0 2em 2em;
-    margin: 0;
-    color: #D7BDCA;
-    font-family: "MockFlowFont";
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-    overflow: hidden;
-}
-
-.delete-button {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    background-color: #ff0000;
-    border-radius: 50%;
-    transition: background-color 0.3s ease;
-}
-
-.delete-button:hover {
-    background-color: #cc0000;
-}
 .filter-enter {
     transform: translateX(-100%);
 }
+
 .filter-enter-active {
     transform: translateX(0);
     transition: transform 300ms;
 }
+
 .filter-exit {
     transform: translateX(0);
 }
+
 .filter-exit-active {
     transform: translateX(-100%);
     transition: transform 300ms;
 }
 
-.cards-container.full-width {
-    width: 100%;
+.filters__btn {
+    background-color: var(--accent-color);
+    color: var(--text-color);
+    border-radius: var(--curve);
+    padding: 10px 20px;
 }
 
-.filter-menu {
-    width: 300px;
-    margin-right: 20px;
-    background-color: transparent;
+.filters__btn:hover {
+    background-color: #3a58c8;
 }
 
+.sort-dropdown {
+    background-color: var(--surface-color);
+    border-radius: var(--curve);
+    color: var(--text-color);
+}
+
+.sort-dropdown .MuiInputBase-input {
+    color: var(--text-color);
+}
+
+.sort-dropdown .MuiOutlinedInput-notchedOutline {
+    border-color: var(--text-color);
+}

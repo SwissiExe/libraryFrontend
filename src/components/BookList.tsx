@@ -15,13 +15,15 @@ import {
     Slider,
     Button,
     CardContent,
-    MenuItem // Importiere MenuItem
+    MenuItem
 } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import AddIcon from '@mui/icons-material/Add';
-import CloseIcon from '@mui/icons-material/Close';
+import {
+    Delete as DeleteIcon,
+    ExpandLess as ExpandLessIcon,
+    ExpandMore as ExpandMoreIcon,
+    Add as AddIcon,
+    Close as CloseIcon
+} from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
 import './BookList.css';
@@ -46,10 +48,10 @@ const BookList: React.FC = () => {
     const [selectedGenres, setSelectedGenres] = useState<string[]>(genresList);
     const [selectedSizes, setSelectedSizes] = useState<string[]>(sizesList);
     const [showFilter, setShowFilter] = useState<boolean>(true);
-    const [sortOption, setSortOption] = useState<string>(''); // State für Sortierungsoption
-    const [loading, setLoading] = useState<boolean>(true); // State für das Laden der Bücher
-    const [visibleBooks, setVisibleBooks] = useState<Book[]>([]); // Sichtbare Bücher für Infinite Scroll
-    const [hasMore, setHasMore] = useState<boolean>(true); // Hat mehr Bücher zum Laden
+    const [sortOption, setSortOption] = useState<string>('');
+    const [loading, setLoading] = useState<boolean>(true);
+    const [visibleBooks, setVisibleBooks] = useState<Book[]>([]);
+    const [hasMore, setHasMore] = useState<boolean>(true);
     const navigate = useNavigate();
 
     const filterRef = useRef<HTMLDivElement>(null);
@@ -74,17 +76,10 @@ const BookList: React.FC = () => {
         const booksData = await getAllBooks();
         if (Array.isArray(booksData)) {
             setBooks(booksData);
-            // Lade die Buchbilder und speichere sie im State
-            const images: { [key: number]: string } = {};
-            booksData.forEach(book => {
-                if (book.img && !images[book.id]) {
-                    images[book.id] = book.img;
-                }
-            });
-            setLoading(false);
         } else {
             console.error("Expected an array of books");
         }
+        setLoading(false);
     };
 
     const handleDelete = async (id: number) => {
@@ -118,7 +113,6 @@ const BookList: React.FC = () => {
 
     const filterBooks = () => {
         const query = searchQuery.toLowerCase();
-
         const filtered = books.filter(book => {
             const releaseYear = book.releasedate.getUTCFullYear();
             const sizeLabel = getSizeLabel(book.pages);
@@ -137,7 +131,6 @@ const BookList: React.FC = () => {
     };
 
     const handleBookClick = (id: number) => {
-        console.log(id)
         navigate(`/book/${id}`);
     };
 
@@ -156,7 +149,6 @@ const BookList: React.FC = () => {
     const handleReleaseRangeChange = (event: Event, newValue: number | number[]) => {
         setReleaseRange(newValue as number[]);
     };
-
 
     const loadMoreBooks = () => {
         if (visibleBooks.length >= filteredBooks.length) {
@@ -182,14 +174,14 @@ const BookList: React.FC = () => {
     );
 
     const Card: React.FC<{
-        id: number
+        id: number;
         title: string;
         description: string;
         author: string;
         pages: number;
         img: string;
-    }> = ({ title, description, author, img , id}) => (
-        <MuiCard className={`card ${loading ? 'loading' : ''}`} >
+    }> = ({ id, title, description, author, img }) => (
+        <MuiCard className={`card ${loading ? 'loading' : ''}`}>
             <CardMedia
                 component="img"
                 height="200"
@@ -197,7 +189,7 @@ const BookList: React.FC = () => {
                 alt={title}
                 className="card__image"
             />
-            <div className="card__overlay" >
+            <div className="card__overlay">
                 <div className="card__header">
                     <div className="card__header-text">
                         <Typography variant="h6" className="card__title">
@@ -208,7 +200,7 @@ const BookList: React.FC = () => {
                         </Typography>
                     </div>
                 </div>
-                <CardContent>
+                <CardContent className="card__header__header">
                     <Typography variant="body2" color="textSecondary" component="p" className="card__description">
                         {description}
                     </Typography>
@@ -219,15 +211,23 @@ const BookList: React.FC = () => {
 
     return (
         <div className="container">
-            <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
-                <Typography variant="h3" className="header-title" gutterBottom>
-                    Library Management
+            <Box display="flex" justifyContent="space-between" alignItems="center" mb={4} className="header-content">
+                <Typography variant="h4" className="header-title" gutterBottom>
+                    <span>Library</span> Management
                 </Typography>
+                <TextField
+                    label="Search"
+                    variant="outlined"
+                    value={searchQuery}
+                    onChange={e => setSearchQuery(e.target.value)}
+                    className="search-field"
+                />
                 <Button
                     variant="contained"
                     color="primary"
                     startIcon={<AddIcon />}
                     onClick={handleAddBookClick}
+                    className="add-book-button"
                 >
                     Add Book
                 </Button>
@@ -246,19 +246,7 @@ const BookList: React.FC = () => {
                 </Button>
             </Box>
 
-            <Box my={4} className="search-box">
-                <TextField
-                    label="Search by Title or Author"
-                    variant="outlined"
-                    fullWidth
-                    value={searchQuery}
-                    onChange={e => setSearchQuery(e.target.value)}
-                    className="search-field"
-                    color="primary"
-                />
-            </Box>
-
-            <Box display="flex">
+            <Box display="flex" className="content">
                 <CSSTransition
                     in={showFilter}
                     timeout={300}
@@ -311,60 +299,33 @@ const BookList: React.FC = () => {
                 </CSSTransition>
 
                 <div className={`cards-container ${!showFilter ? 'full-width' : ''}`}>
-                    <Grid className="conny-ponny" container spacing={4}>
+                    <Grid container spacing={4}>
                         {visibleBooks.map((book, index) => {
-                            if (index === visibleBooks.length - 1) {
-                                return (
-                                    <Grid className="boss-con" item key={book.id} xs={12} sm={6} md={4} ref={lastBookRef}>
-                                        {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-                                        <a href="#"  className={`card`} onClick={() => handleBookClick(book.id)}>
-                                            <Card
-                                                id={book.id}
-                                                title={book.title}
-                                                description={book.description}
-                                                author={book.author}
-                                                img={book.img} // Verwende das Bild aus dem State
-                                                pages={book.pages}
-                                            />
-                                            <IconButton
-                                                edge="end"
-                                                className={`delete-button`}
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    handleDelete(book.id);
-                                                }}
-                                            >
-                                                <DeleteIcon />
-                                            </IconButton>
-                                        </a>
-                                    </Grid>
-                                );
-                            } else {
-                                return (
-                                    <Grid className="boss-con"  item key={book.id} xs={12} sm={6} md={4}>
-                                        <a href="#" className={`card`} onClick={() => handleBookClick(book.id)}>
-                                            <Card
-                                                id={book.id}
-                                                title={book.title}
-                                                description={book.description}
-                                                author={book.author}
-                                                img={book.img}
-                                                pages={book.pages}
-                                            />
-                                            <IconButton
-                                                edge="end"
-                                                className={`delete-button`}
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    handleDelete(book.id);
-                                                }}
-                                            >
-                                                <DeleteIcon />
-                                            </IconButton>
-                                        </a>
-                                    </Grid>
-                                );
-                            }
+                            const card = (
+                                <Grid item key={book.id} xs={12} sm={6} md={4} ref={index === visibleBooks.length - 1 ? lastBookRef : null}>
+                                    <a href="#" className={`card`} onClick={() => handleBookClick(book.id)}>
+                                        <Card
+                                            id={book.id}
+                                            title={book.title}
+                                            description={book.description}
+                                            author={book.author}
+                                            img={book.img}
+                                            pages={book.pages}
+                                        />
+                                        <IconButton
+                                            edge="end"
+                                            className={`delete-button`}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleDelete(book.id);
+                                            }}
+                                        >
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    </a>
+                                </Grid>
+                            );
+                            return card;
                         })}
                     </Grid>
                 </div>
