@@ -135,8 +135,8 @@ const BookDetail: React.FC = () => {
 
                                     </div>
                                     <Button
-                                        variant="contained"
-                                        color="primary"
+                                        variant="outlined"
+                                        color="secondary"
                                         className="write-review-button"
                                         onClick={handleOpenReviewForm}
                                     >

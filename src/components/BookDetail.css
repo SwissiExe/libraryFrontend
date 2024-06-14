@@ -100,7 +100,9 @@ body {
 .write-review-button {
     position: absolute;
     bottom: 10px;
+   color: white !important;
     right: 10px;
+    border: #3f51b5 1px solid !important;
 }
 
 .reviews-container {
