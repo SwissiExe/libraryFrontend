@@ -176,6 +176,7 @@ body {
     justify-content: space-between;
 }
 .details-Edit-Button {
+    margin: 0;
     background: transparent;
 }
 .details-Edit-Button-img {
