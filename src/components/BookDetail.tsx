@@ -80,7 +80,12 @@ const BookDetail: React.FC = () => {
     return (
         <>
             <Container className={`container-bookDetail ${isReviewFormOpen ? 'blur' : ''}`}>
-                <Button variant="contained" color="primary" onClick={() => navigate('/')} className="button">
+                <Button
+                    variant="outlined"
+                    color="secondary"
+                    onClick={() => navigate('/')}
+                    className="back-button"
+                >
                     Back to Home
                 </Button>
                 <Box className="center-content">
