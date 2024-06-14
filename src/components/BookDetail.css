@@ -179,6 +179,9 @@ body {
     margin: 0;
     background: transparent;
 }
+.detail-input-color input, textarea, label{
+    color: white !important;
+}
 .details-Edit-Button-img {
     width: 20px;
     margin: 0;

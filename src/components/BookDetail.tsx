@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getBookById, Book } from '../services/BookService';
+import { getBookById, updateBook, Book } from '../services/BookService';
 import { getReviewsByBookId, addReview, getAverageRatingByBookId, Review, NewReview } from '../services/ReviewService';
-import {Container, Typography, Box, Button, CardMedia, Paper, TextField, IconButton} from '@mui/material';
+import { Container, Typography, Box, Button, CardMedia, Paper, TextField, IconButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import StarIcon from '@mui/icons-material/Star';
+import EditIcon from '@mui/icons-material/Edit';
 import './BookDetail.css';
-import CloseIcon from "@mui/icons-material/Close";
 
 const BookDetail: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -20,6 +21,8 @@ const BookDetail: React.FC = () => {
     const [averageRating, setAverageRating] = useState<number>(0);
     const [hoverRating, setHoverRating] = useState<number | null>(null);
     const [isReviewFormOpen, setIsReviewFormOpen] = useState(false);
+    const [isEditFormOpen, setIsEditFormOpen] = useState(false);
+    const [bookEdit, setBookEdit] = useState<Book | null>(null);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -39,8 +42,8 @@ const BookDetail: React.FC = () => {
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
-        setNewReview({
-            ...newReview,
+        setBookEdit({
+            ...book!,
             [name]: value
         });
     };
@@ -65,12 +68,31 @@ const BookDetail: React.FC = () => {
         }
     };
 
+    const handleBookUpdate = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (bookEdit && id) {
+            await updateBook(bookEdit);
+            const updatedBook = await getBookById(parseInt(id));
+            setBook(updatedBook);
+            setIsEditFormOpen(false); // Close the form after submission
+        }
+    };
+
     const handleOpenReviewForm = () => {
         setIsReviewFormOpen(true);
     };
 
     const handleCloseReviewForm = () => {
         setIsReviewFormOpen(false);
+    };
+
+    const handleOpenEditForm = () => {
+        setBookEdit(book);
+        setIsEditFormOpen(true);
+    };
+
+    const handleCloseEditForm = () => {
+        setIsEditFormOpen(false);
     };
 
     if (!book) {
@@ -106,7 +128,7 @@ const BookDetail: React.FC = () => {
                                 <Typography variant="h4" gutterBottom className="typography-title">
                                     {book.title}
                                 </Typography>
-                                    <button className="details-Edit-Button"><img className="details-Edit-Button-img" src="https://static-00.iconduck.com/assets.00/edit-icon-511x512-ir85i9io.png" alt="buttonpng"/></button>
+                                    <button onClick={handleOpenEditForm} className="details-Edit-Button"><img className="details-Edit-Button-img" src="https://static-00.iconduck.com/assets.00/edit-icon-511x512-ir85i9io.png" alt="buttonpng"/></button>
                                 </div>
                                 <Typography variant="h6" gutterBottom className="typography-author">
                                     by {book.author}
@@ -193,13 +215,12 @@ const BookDetail: React.FC = () => {
                                 onChange={handleInputChange}
                                 fullWidth
                                 margin="normal"
-
                             />
                             <Box className="rating-box">
                                 {[1, 2, 3, 4, 5].map(value => (
                                     <StarIcon
                                         key={value}
-                                        sx={{color: (hoverRating || newReview.rating) >= value ? 'gold' : 'grey'}}
+                                        sx={{ color: (hoverRating || newReview.rating) >= value ? 'gold' : 'grey' }}
                                         onMouseEnter={() => setHoverRating(value)}
                                         onMouseLeave={() => setHoverRating(null)}
                                         onClick={() => handleRatingChange(value)}
@@ -214,7 +235,6 @@ const BookDetail: React.FC = () => {
                                 onChange={handleInputChange}
                                 fullWidth
                                 margin="normal"
-                                className="input-Detail-View"
                                 multiline
                                 rows={4}
                             />
@@ -225,8 +245,80 @@ const BookDetail: React.FC = () => {
                     </Box>
                 </div>
             )}
+            {isEditFormOpen && bookEdit && (
+                <div className="review-form-overlay">
+                    <Box className="review-form-container">
+                        <IconButton
+                            onClick={handleCloseEditForm}
+                            className="close-button"
+                        >
+                            <CloseIcon />
+                        </IconButton>
+                        <form onSubmit={handleBookUpdate} className="add-review-form">
+                            <Typography variant="h6" gutterBottom>
+                                Edit Book
+                            </Typography>
+                            <TextField
+                                id="book-title"
+                                label="Title"
+                                name="title"
+                                className="detail-input-color"
+                                value={bookEdit.title}
+                                onChange={handleInputChange}
+                                fullWidth
+                                margin="normal"
+                            />
+                            <TextField
+                                id="book-author"
+                                label="Author"
+                                name="author"
+                                className="detail-input-color"
+                                value={bookEdit.author}
+                                onChange={handleInputChange}
+                                fullWidth
+                                margin="normal"
+                            />
+                            <TextField
+                                id="book-description"
+                                label="Description"
+                                name="description"
+                                className="detail-input-color"
+                                value={bookEdit.description}
+                                onChange={handleInputChange}
+                                fullWidth
+                                margin="normal"
+                                multiline
+                                rows={4}
+                            />
+                            <TextField
+                                id="book-pages"
+                                label="Pages"
+                                name="pages"
+                                type="number"
+                                className="detail-input-color"
+                                value={bookEdit.pages}
+                                onChange={handleInputChange}
+                                fullWidth
+                                margin="normal"
+                            />
+                            <TextField
+                                id="book-genres"
+                                label="Genres"
+                                name="genres"
+                                className="detail-input-color"
+                                value={bookEdit.genres}
+                                onChange={handleInputChange}
+                                fullWidth
+                                margin="normal"
+                            />
+                            <Button type="submit" variant="contained" color="primary">
+                                Update
+                            </Button>
+                        </form>
+                    </Box>
+                </div>
+            )}
         </>
     );
 };
-
 export default BookDetail;

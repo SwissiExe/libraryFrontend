@@ -45,3 +45,7 @@ export const deleteBook = async (id: number): Promise<void> => {
         method: 'DELETE',
     });
 };
+export const updateBook = async (book: Book): Promise<void> => {
+   console.log(book)
+};
+
