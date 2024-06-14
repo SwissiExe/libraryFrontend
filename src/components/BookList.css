@@ -87,7 +87,7 @@ input {
 }
 
 .filter-menu {
-    overflow: hidden;
+    overflow: auto;
     width: 300px;
     margin-right: 20px;
     background-color: var(--surface-color);
