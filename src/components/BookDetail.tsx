@@ -102,9 +102,12 @@ const BookDetail: React.FC = () => {
                             </Box>
 
                             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px', flexGrow: '1', alignItems: 'flex-start', paddingLeft: '25px' }}>
+                                <div className="typography-title-group">
                                 <Typography variant="h4" gutterBottom className="typography-title">
                                     {book.title}
                                 </Typography>
+                                    <button className="details-Edit-Button"><img className="details-Edit-Button-img" src="https://static-00.iconduck.com/assets.00/edit-icon-511x512-ir85i9io.png" alt="buttonpng"/></button>
+                                </div>
                                 <Typography variant="h6" gutterBottom className="typography-author">
                                     by {book.author}
                                 </Typography>

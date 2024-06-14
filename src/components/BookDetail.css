@@ -168,6 +168,18 @@ body {
 .input-Detail-View {
     color: white !important;
 }
+.typography-title-group {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+.details-Edit-Button {
+    background: transparent;
+}
+.details-Edit-Button-img {
+    width: 20px;
+    margin: 0;
+}
 .add-review-form .MuiTextField-root {
     background-color: var(--card-bg-color);
     border-radius: var(--curve);
