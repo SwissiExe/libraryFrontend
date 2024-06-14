@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { getAllBooks, deleteBook, Book } from '../services/BookService';
+import { getAverageRatingByBookId } from '../services/ReviewService';
 import {
     TextField,
     IconButton,
@@ -14,19 +15,18 @@ import {
     Collapse,
     Slider,
     Button,
-    CardContent,
-    MenuItem
+    CardContent
 } from '@mui/material';
 import {
     Delete as DeleteIcon,
     ExpandLess as ExpandLessIcon,
     ExpandMore as ExpandMoreIcon,
-    Add as AddIcon,
-    Close as CloseIcon
+    Add as AddIcon
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
 import './BookList.css';
+import StarIcon from "@mui/icons-material/Star";
 
 const genresList = [
     'Fantasy',
@@ -180,34 +180,61 @@ const BookList: React.FC = () => {
         author: string;
         pages: number;
         img: string;
-    }> = ({ id, title, description, author, img }) => (
-        <MuiCard className={`card ${loading ? 'loading' : ''}`}>
-            <CardMedia
-                component="img"
-                height="200"
-                image={img}
-                alt={title}
-                className="card__image"
-            />
-            <div className="card__overlay">
-                <div className="card__header">
-                    <div className="card__header-text">
-                        <Typography variant="h6" className="card__title">
-                            {title}
-                        </Typography>
-                        <Typography variant="body2" className="card__author">
-                            {author}
-                        </Typography>
+        genres: string;
+    }> = ({ id, title, description, author, img, genres, pages }) => {
+        const [averageRating, setAverageRating] = useState<number>(0);
+
+        useEffect(() => {
+            const fetchAverageRating = async () => {
+                const avgRating = await getAverageRatingByBookId(id);
+                setAverageRating(avgRating);
+            };
+            fetchAverageRating();
+        }, [id]);
+
+        return (
+            <MuiCard className={`card ${loading ? 'loading' : ''}`}>
+                <CardMedia
+                    component="img"
+                    height="200"
+                    image={img}
+                    alt={title}
+                    className="card__image"
+                />
+                <div className="card__overlay">
+                    <div className="card__header">
+                        <div className="card__header-text">
+                            <Typography variant="h6" className="card__title">
+                                {title}
+                            </Typography>
+                            <Typography variant="body2" className="card__author">
+                                {author}
+                            </Typography>
+                        </div>
+
                     </div>
+                    <CardContent className="card__header__header">
+                        <div className="card__description">
+                        <Box className="rating-box">
+                            {[1, 2, 3, 4, 5].map(value => (
+                                <StarIcon
+                                    key={value}
+                                    sx={{ color: value <= averageRating ? 'gold' : 'grey' }}
+                                />
+                            ))}
+                        </Box>
+                        </div>
+                        <Typography variant="body2" component="p" className="card__description">
+                            Genre: {genres}
+                        </Typography>
+                        <Typography variant="body2" component="p" className="card__description">
+                            {pages} Seiten
+                        </Typography>
+                    </CardContent>
                 </div>
-                <CardContent className="card__header__header">
-                    <Typography variant="body2" color="textSecondary" component="p" className="card__description">
-                        {description}
-                    </Typography>
-                </CardContent>
-            </div>
-        </MuiCard>
-    );
+            </MuiCard>
+        );
+    };
 
     return (
         <div className="container">
@@ -311,6 +338,7 @@ const BookList: React.FC = () => {
                                             author={book.author}
                                             img={book.img}
                                             pages={book.pages}
+                                            genres={book.genres}
                                         />
                                         <IconButton
                                             edge="end"

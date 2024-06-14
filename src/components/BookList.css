@@ -153,11 +153,16 @@ input {
     color: var(--text-color);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-
+.card__description {
+    display: flex;
+    flex-direction: column;
+    padding-left: 1em;
+    padding-top: 0 !important;
+    color: var(--secondary-text-color);
+}
 .card:hover {
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
 }
-
 .boss-con {
     max-width: 275px;
     min-width: 275px;
@@ -189,7 +194,7 @@ input {
 
 .card__header {
     position: relative;
-    display: flex;
+
     align-items: center;
     gap: 2em;
     padding: 2em;

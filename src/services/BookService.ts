@@ -1,3 +1,5 @@
+// BookService.ts
+
 export interface Book {
     id: number;
     title: string;
@@ -10,7 +12,6 @@ export interface Book {
 }
 
 const API_URL = 'http://localhost:8080/api';
-
 
 export const getAllBooks = async (): Promise<Book[]> => {
     const response = await fetch(`${API_URL}/get/books`);
