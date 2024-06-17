@@ -59,6 +59,10 @@ const BookDetail: React.FC = () => {
             ...book!,
             [name]: value
         });
+        setNewReview({
+            ...newReview,
+            [name]: value
+        });
     };
 
     const handleRatingChange = (newRating: number) => {
@@ -332,6 +336,7 @@ const GenreSelector: React.FC<GenreSelectorProps> = ({ initialGenre }) => {
         <TextField
             id="genre-select"
             select
+            name="genre"
             label="Genre"
             variant="outlined"
             fullWidth
