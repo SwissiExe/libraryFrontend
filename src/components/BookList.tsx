@@ -266,17 +266,19 @@ const BookList: React.FC = () => {
                 {showConfirm && bookToDelete === id && (
                     <div className="confirm-overlay">
                         <div className="confirm-box">
-                            <Typography variant="h6">Are you sure you want to delete this book?</Typography>
+                            <Typography variant="h6" sx={{color: "white"}}>Are you sure you want to delete this book?</Typography>
                             <Box mt={2}>
                                 <Button
                                     variant="contained"
                                     color="secondary"
+                                    className="confirm-box-button"
                                     onClick={handleConfirmDelete}
                                     style={{ marginRight: 8 }}
                                 >
                                     Yes
                                 </Button>
                                 <Button
+                                    className="confirm-box-button"
                                     variant="contained"
                                     onClick={handleCancelDelete}
                                 >

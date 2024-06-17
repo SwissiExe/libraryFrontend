@@ -153,6 +153,13 @@ input {
     color: var(--text-color);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
+.confirm-box-button {
+    background: transparent !important;
+
+    border: #3f51b5 1px solid !important;
+    color: white !important;
+    z-index: 10;
+}
 .card__description {
     display: flex;
     flex-direction: column;
@@ -215,7 +222,7 @@ input {
 }
 
 .confirm-box {
-    background: white;
+    background: var(--card-bg-color);
     padding: 20px;
     border-radius: 8px;
     text-align: center;
