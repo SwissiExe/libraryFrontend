@@ -146,7 +146,7 @@ input {
     width: 275px;
     height: 100%;
     min-width: 275px;
-    border-radius: var(--curve);
+    border-radius: var(--curve) !important;
     overflow: hidden;
     text-decoration: none;
     background-color: var(--surface-color) !important;
@@ -190,6 +190,35 @@ input {
 
 .card:hover .card__overlay {
     transform: translateY(0);
+}
+.delete-button {
+    opacity: 0;
+}
+.card:hover .delete-button {
+    opacity: 1;
+}
+.card:hover img {
+    transition: .3s ease-in-out;
+    filter: brightness(65%)
+}
+.confirm-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9000;
+}
+
+.confirm-box {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
 }
 
 .card__header {

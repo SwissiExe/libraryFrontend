@@ -53,6 +53,8 @@ const BookList: React.FC = () => {
     const [visibleBooks, setVisibleBooks] = useState<Book[]>([]);
     const [hasMore, setHasMore] = useState<boolean>(true);
     const navigate = useNavigate();
+    const [showConfirm, setShowConfirm] = useState<boolean>(false);
+    const [bookToDelete, setBookToDelete] = useState<number | null>(null);
 
     const filterRef = useRef<HTMLDivElement>(null);
     const observer = useRef<IntersectionObserver | null>(null);
@@ -173,6 +175,27 @@ const BookList: React.FC = () => {
         [loading, hasMore]
     );
 
+    const handleDeleteClick = (id: number, e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        e.stopPropagation();
+        setBookToDelete(id);
+        setShowConfirm(true);
+    };
+
+    const handleConfirmDelete = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        e.stopPropagation();
+        if (bookToDelete !== null) {
+            handleDelete(bookToDelete);
+        }
+        setShowConfirm(false);
+        setBookToDelete(null);
+    };
+
+    const handleCancelDelete = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        e.stopPropagation();
+        setShowConfirm(false);
+        setBookToDelete(null);
+    };
+
     const Card: React.FC<{
         id: number;
         title: string;
@@ -193,7 +216,15 @@ const BookList: React.FC = () => {
         }, [id]);
 
         return (
-            <MuiCard className={`card ${loading ? 'loading' : ''}`}>
+            <MuiCard className={`card ${loading ? 'loading' : ''}`} onClick={() => handleBookClick(id)}>
+                <IconButton
+                    edge="end"
+                    className="delete-button"
+                    onClick={(e) => handleDeleteClick(id, e)}
+                    style={{ position: 'absolute', top: 5, right: 5, zIndex: 9, color: "white" }}
+                >
+                    <DeleteIcon />
+                </IconButton>
                 <CardMedia
                     component="img"
                     height="200"
@@ -211,18 +242,17 @@ const BookList: React.FC = () => {
                                 {author}
                             </Typography>
                         </div>
-
                     </div>
                     <CardContent className="card__header__header">
                         <div className="card__description">
-                        <Box className="rating-box">
-                            {[1, 2, 3, 4, 5].map(value => (
-                                <StarIcon
-                                    key={value}
-                                    sx={{ color: value <= averageRating ? 'gold' : 'grey' }}
-                                />
-                            ))}
-                        </Box>
+                            <Box className="rating-box">
+                                {[1, 2, 3, 4, 5].map(value => (
+                                    <StarIcon
+                                        key={value}
+                                        sx={{ color: value <= averageRating ? 'gold' : 'grey' }}
+                                    />
+                                ))}
+                            </Box>
                         </div>
                         <Typography variant="body2" component="p" className="card__description">
                             Genre: {genres}
@@ -232,6 +262,30 @@ const BookList: React.FC = () => {
                         </Typography>
                     </CardContent>
                 </div>
+
+                {showConfirm && bookToDelete === id && (
+                    <div className="confirm-overlay">
+                        <div className="confirm-box">
+                            <Typography variant="h6">Are you sure you want to delete this book?</Typography>
+                            <Box mt={2}>
+                                <Button
+                                    variant="contained"
+                                    color="secondary"
+                                    onClick={handleConfirmDelete}
+                                    style={{ marginRight: 8 }}
+                                >
+                                    Yes
+                                </Button>
+                                <Button
+                                    variant="contained"
+                                    onClick={handleCancelDelete}
+                                >
+                                    No
+                                </Button>
+                            </Box>
+                        </div>
+                    </div>
+                )}
             </MuiCard>
         );
     };
@@ -329,28 +383,17 @@ const BookList: React.FC = () => {
                     <Grid container spacing={4}>
                         {visibleBooks.map((book, index) => {
                             const card = (
-                                <Grid item key={book.id} xs={12} sm={6} md={4} ref={index === visibleBooks.length - 1 ? lastBookRef : null}>
-                                    <a href="#" className={`card`} onClick={() => handleBookClick(book.id)}>
-                                        <Card
-                                            id={book.id}
-                                            title={book.title}
-                                            description={book.description}
-                                            author={book.author}
-                                            img={book.img}
-                                            pages={book.pages}
-                                            genres={book.genres}
-                                        />
-                                        <IconButton
-                                            edge="end"
-                                            className={`delete-button`}
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                handleDelete(book.id);
-                                            }}
-                                        >
-                                            <DeleteIcon />
-                                        </IconButton>
-                                    </a>
+                                <Grid item key={book.id} xs={12} sm={6} md={4}
+                                      ref={index === visibleBooks.length - 1 ? lastBookRef : null}>
+                                    <Card
+                                        id={book.id}
+                                        title={book.title}
+                                        description={book.description}
+                                        author={book.author}
+                                        img={book.img}
+                                        pages={book.pages}
+                                        genres={book.genres}
+                                    />
                                 </Grid>
                             );
                             return card;

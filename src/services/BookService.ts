@@ -46,6 +46,13 @@ export const deleteBook = async (id: number): Promise<void> => {
     });
 };
 export const updateBook = async (book: Book): Promise<void> => {
-   console.log(book)
+    const response = await fetch(`${API_URL}/update/book`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(book),
+    });
+    return response.json();
 };
 
