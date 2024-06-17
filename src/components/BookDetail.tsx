@@ -2,11 +2,25 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getBookById, updateBook, Book } from '../services/BookService';
 import { getReviewsByBookId, addReview, getAverageRatingByBookId, Review, NewReview } from '../services/ReviewService';
-import { Container, Typography, Box, Button, CardMedia, Paper, TextField, IconButton } from '@mui/material';
+import {Container, Typography, Box, Button, CardMedia, Paper, TextField, IconButton, MenuItem} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import StarIcon from '@mui/icons-material/Star';
-import EditIcon from '@mui/icons-material/Edit';
 import './BookDetail.css';
+
+
+interface GenreSelectorProps {
+    initialGenre: string;
+}
+
+const genres = [
+    'Fantasy',
+    'Krimi',
+    'Horror',
+    'Liebesroman',
+    'Science Fiction',
+    'Sachbuch'
+];
+
 
 const BookDetail: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -24,7 +38,6 @@ const BookDetail: React.FC = () => {
     const [isEditFormOpen, setIsEditFormOpen] = useState(false);
     const [bookEdit, setBookEdit] = useState<Book | null>(null);
     const navigate = useNavigate();
-
     useEffect(() => {
         const fetchBookAndReviews = async () => {
             if (id) {
@@ -222,7 +235,6 @@ const BookDetail: React.FC = () => {
                                         key={value}
                                         sx={{ color: (hoverRating || newReview.rating) >= value ? 'gold' : 'grey' }}
                                         onMouseEnter={() => setHoverRating(value)}
-                                        onMouseLeave={() => setHoverRating(null)}
                                         onClick={() => handleRatingChange(value)}
                                     />
                                 ))}
@@ -301,16 +313,7 @@ const BookDetail: React.FC = () => {
                                 fullWidth
                                 margin="normal"
                             />
-                            <TextField
-                                id="book-genres"
-                                label="Genres"
-                                name="genres"
-                                className="detail-input-color"
-                                value={bookEdit.genres}
-                                onChange={handleInputChange}
-                                fullWidth
-                                margin="normal"
-                            />
+                            <GenreSelector initialGenre={bookEdit.genres} />
                             <Button type="submit" variant="contained" color="primary">
                                 Update
                             </Button>
@@ -322,3 +325,26 @@ const BookDetail: React.FC = () => {
     );
 };
 export default BookDetail;
+
+const GenreSelector: React.FC<GenreSelectorProps> = ({ initialGenre }) => {
+    const [genre, setGenre] = useState<string>(initialGenre);
+    return (
+        <TextField
+            id="genre-select"
+            select
+            label="Genre"
+            variant="outlined"
+            fullWidth
+            className="detail-input-color"
+            margin="normal"
+            value={genre}
+            onChange={(e) => setGenre(e.target.value)}
+        >
+            {genres.map((option) => (
+                <MenuItem key={option} value={option}>
+                    {option}
+                </MenuItem>
+            ))}
+        </TextField>
+    );
+};
