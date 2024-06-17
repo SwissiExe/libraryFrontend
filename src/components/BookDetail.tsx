@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getBookById, updateBook, Book } from '../services/BookService';
 import { getReviewsByBookId, addReview, getAverageRatingByBookId, Review, NewReview } from '../services/ReviewService';
-import {Container, Typography, Box, Button, CardMedia, Paper, TextField, IconButton, MenuItem} from '@mui/material';
+import { Container, Typography, Box, Button, CardMedia, Paper, TextField, IconButton, MenuItem } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import StarIcon from '@mui/icons-material/Star';
 import './BookDetail.css';
 
-
 interface GenreSelectorProps {
     initialGenre: string;
+    onGenreChange: (genre: string) => void;
 }
 
 const genres = [
@@ -20,7 +20,6 @@ const genres = [
     'Science Fiction',
     'Sachbuch'
 ];
-
 
 const BookDetail: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -38,6 +37,7 @@ const BookDetail: React.FC = () => {
     const [isEditFormOpen, setIsEditFormOpen] = useState(false);
     const [bookEdit, setBookEdit] = useState<Book | null>(null);
     const navigate = useNavigate();
+
     useEffect(() => {
         const fetchBookAndReviews = async () => {
             if (id) {
@@ -55,14 +55,17 @@ const BookDetail: React.FC = () => {
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
-        setBookEdit({
-            ...book!,
+        setBookEdit(prevState => ({
+            ...prevState!,
             [name]: value
-        });
-        setNewReview({
-            ...newReview,
-            [name]: value
-        });
+        }));
+    };
+
+    const handleGenreChange = (genre: string) => {
+        setBookEdit(prevState => ({
+            ...prevState!,
+            genres: genre
+        }));
     };
 
     const handleRatingChange = (newRating: number) => {
@@ -142,10 +145,10 @@ const BookDetail: React.FC = () => {
 
                             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px', flexGrow: '1', alignItems: 'flex-start', paddingLeft: '25px' }}>
                                 <div className="typography-title-group">
-                                <Typography variant="h4" gutterBottom className="typography-title">
-                                    {book.title}
-                                </Typography>
-                                    <button onClick={handleOpenEditForm} className="details-Edit-Button"><img className="details-Edit-Button-img" src="https://static-00.iconduck.com/assets.00/edit-icon-511x512-ir85i9io.png" alt="buttonpng"/></button>
+                                    <Typography variant="h4" gutterBottom className="typography-title">
+                                        {book.title}
+                                    </Typography>
+                                    <button onClick={handleOpenEditForm} className="details-Edit-Button"><img className="details-Edit-Button-img" src="https://static-00.iconduck.com/assets.00/edit-icon-511x512-ir85i9io.png" alt="buttonpng" /></button>
                                 </div>
                                 <Typography variant="h6" gutterBottom className="typography-author">
                                     by {book.author}
@@ -229,7 +232,10 @@ const BookDetail: React.FC = () => {
                                 label="Name"
                                 name="name"
                                 value={newReview.name}
-                                onChange={handleInputChange}
+                                onChange={e => setNewReview(prevState => ({
+                                    ...prevState,
+                                    name: e.target.value
+                                }))}
                                 fullWidth
                                 margin="normal"
                             />
@@ -248,7 +254,10 @@ const BookDetail: React.FC = () => {
                                 label="Comment"
                                 name="comment"
                                 value={newReview.comment}
-                                onChange={handleInputChange}
+                                onChange={e => setNewReview(prevState => ({
+                                    ...prevState,
+                                    comment: e.target.value
+                                }))}
                                 fullWidth
                                 margin="normal"
                                 multiline
@@ -317,7 +326,7 @@ const BookDetail: React.FC = () => {
                                 fullWidth
                                 margin="normal"
                             />
-                            <GenreSelector initialGenre={bookEdit.genres} />
+                            <GenreSelector initialGenre={bookEdit.genres} onGenreChange={handleGenreChange} />
                             <Button type="submit" variant="contained" color="primary">
                                 Update
                             </Button>
@@ -330,8 +339,15 @@ const BookDetail: React.FC = () => {
 };
 export default BookDetail;
 
-const GenreSelector: React.FC<GenreSelectorProps> = ({ initialGenre }) => {
+const GenreSelector: React.FC<GenreSelectorProps> = ({ initialGenre, onGenreChange }) => {
     const [genre, setGenre] = useState<string>(initialGenre);
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newGenre = e.target.value;
+        setGenre(newGenre);
+        onGenreChange(newGenre);
+    };
+
     return (
         <TextField
             id="genre-select"
@@ -343,7 +359,7 @@ const GenreSelector: React.FC<GenreSelectorProps> = ({ initialGenre }) => {
             className="detail-input-color"
             margin="normal"
             value={genre}
-            onChange={(e) => setGenre(e.target.value)}
+            onChange={handleChange}
         >
             {genres.map((option) => (
                 <MenuItem key={option} value={option}>
