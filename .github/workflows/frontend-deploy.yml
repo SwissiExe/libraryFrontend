@@ -16,10 +16,10 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         run: |
           RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" -X POST -H "Content-Type: application/json" \
-               -H "Authorization: JWT $DOCKER_HUB_ACCESS_TOKEN" \
-               -d '{"namespace": "'$DOCKER_USERNAME'", "name": "libraryfrontend", "is_private": false}' \
+               -H "Authorization: JWT ${DOCKER_HUB_ACCESS_TOKEN}" \
+               -d "{\"namespace\":\"${DOCKER_USERNAME}\",\"name\":\"libraryfrontend\",\"is_private\":false}" \
                https://hub.docker.com/v2/repositories/)
-          if [ $RESPONSE -ne 201 ]; then
+          if [ $RESPONSE -ne 201 ] && [ $RESPONSE -ne 409 ]; then
             echo "Failed to create Docker Hub repository, status code: $RESPONSE"
             exit 1
           fi
