@@ -17,21 +17,4 @@ jobs:
                   docker tag libraryFrontend ${{secrets.DOCKER_USERNAME}}/libraryFrontend
                   docker push ${{secrets.DOCKER_USERNAME}}/libraryFrontend && echo "✅ Deployed to Docker Hub" || ( echo "❌ Deployment to Docker Hub failed" && exit 1 )
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment: production
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Log in to Azure
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-    - name: Deploy to Azure
-      run: |
-        az webapp create --resource-group <RESOURCE_GROUP> --plan <APP_SERVICE_PLAN> --name <FRONTEND_WEBAPP_NAME> --deployment-container-image-name ${{ secrets.DOCKER_USERNAME }}/frontend:latest
-        az webapp config container set --name <FRONTEND_WEBAPP_NAME> --resource-group <RESOURCE_GROUP> --docker-custom-image-name ${{ secrets.DOCKER_USERNAME }}/frontend:latest
+   
