@@ -16,9 +16,9 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: |
-          TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d '{"username": "'${DOCKER_USERNAME}'", "password": "'${DOCKER_PASSWORD}'"}' https://hub.docker.com/v2/users/login/ | jq -r .token)
+          TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d '{"username": "'swissiexe'", "password": "'${DOCKER_PASSWORD}'"}' https://hub.docker.com/v2/users/login/ | jq -r .token)
           curl -s -H "Authorization: JWT ${TOKEN}" -H "Content-Type: application/json" -X POST \
-               -d "{\"namespace\":\"${DOCKER_USERNAME}\",\"name\":\"libraryfrontend\",\"is_private\":false,\"description\":\"test\",\"full_description\":\"full-description\"}" \
+               -d "{\"namespace\":\"swissiexe\",\"name\":\"libraryfrontend\",\"is_private\":false,\"description\":\"test\",\"full_description\":\"full-description\"}" \
                https://hub.docker.com/v2/repositories/
       - name: List directory contents
         run: ls -R
