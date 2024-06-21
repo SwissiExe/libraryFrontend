@@ -30,6 +30,6 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         run: |
           docker build -f ./docker/Dockerfile .  # Specify the build context (current directory)
-          echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin
+          docker login --username "$DOCKER_USERNAME" --password-stdin "$DOCKER_PASSWORD"
           docker tag libraryfrontend $DOCKER_USERNAME/libraryfrontend
           docker push $DOCKER_USERNAME/libraryfrontend && echo "✅ Deployed to Docker Hub" || ( echo "❌ Deployment to Docker Hub failed" && exit 1 )
