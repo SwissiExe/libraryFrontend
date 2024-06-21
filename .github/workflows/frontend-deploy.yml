@@ -29,5 +29,5 @@ jobs:
         run: |
           docker build -t libraryfrontend:latest -f ./docker/Dockerfile .  # Specify the build context (current directory) and tag the built image
           docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
-          docker tag libraryfrontend:latest $DOCKER_USERNAME/libraryfrontend:latest
-          docker push $DOCKER_USERNAME/libraryfrontend:latest && echo "✅ Deployed to Docker Hub" || ( echo "❌ Deployment to Docker Hub failed" && exit 1 )
+          docker tag libraryfrontend:latest libraryfrontend:latest
+          docker push libraryfrontend:latest && echo "✅ Deployed to Docker Hub" || ( echo "❌ Deployment to Docker Hub failed" && exit 1 )
