@@ -14,22 +14,20 @@ jobs:
         env:
           DOCKER_HUB_ACCESS_TOKEN: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: |
           TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d '{"username": "'${DOCKER_USERNAME}'", "password": "'${DOCKER_PASSWORD}'"}' https://hub.docker.com/v2/users/login/ | jq -r .token)
-          curl -s -H "Authorization: JWT ${DOCKER_HUB_ACCESS_TOKEN}" "https://hub.docker.com/v2/repositories/" \
-                                       --data 'description=test' \
-                                       --data 'full_description=full-description' \
-                                       --data 'is_private=false' \
-                                       --data 'name=test' \
-                                       --data "namespace=${UNAME}"
+          curl -s -H "Authorization: JWT ${TOKEN}" -H "Content-Type: application/json" -X POST \
+               -d "{\"namespace\":\"${DOCKER_USERNAME}\",\"name\":\"libraryfrontend\",\"is_private\":false,\"description\":\"test\",\"full_description\":\"full-description\"}" \
+               https://hub.docker.com/v2/repositories/
       - name: List directory contents
         run: ls -R
       - name: Build the Docker image
         env:
-          password: ${{ secrets.DOCKER_PASSWORD }}
-          username: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         run: |
           docker build -f ./docker/Dockerfile .  # Specify the build context (current directory)
-          docker login -u "$username" -p "$password"
-          docker tag libraryfrontend $username/libraryfrontend
+          echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin
+          docker tag libraryfrontend $DOCKER_USERNAME/libraryfrontend
           docker push $DOCKER_USERNAME/libraryfrontend && echo "✅ Deployed to Docker Hub" || ( echo "❌ Deployment to Docker Hub failed" && exit 1 )
