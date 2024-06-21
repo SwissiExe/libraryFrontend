@@ -15,14 +15,13 @@ jobs:
           DOCKER_HUB_ACCESS_TOKEN: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         run: |
-          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" -X POST -H "Content-Type: application/json" \
-               -H "Authorization: JWT ${DOCKER_HUB_ACCESS_TOKEN}" \
-               -d "{\"namespace\":\"${DOCKER_USERNAME}\",\"name\":\"libraryfrontend\",\"is_private\":false}" \
-               https://hub.docker.com/v2/repositories/)
-          if [ $RESPONSE -ne 201 ] && [ $RESPONSE -ne 409 ]; then
-            echo "Failed to create Docker Hub repository, status code: $RESPONSE"
-            exit 1
-          fi
+          TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d '{"username": "'${DOCKER_USERNAME}'", "password": "'${DOCKER_PASSWORD}'"}' https://hub.docker.com/v2/users/login/ | jq -r .token)
+          curl -s -H "Authorization: JWT ${DOCKER_HUB_ACCESS_TOKEN}" "https://hub.docker.com/v2/repositories/" \
+                                       --data 'description=test' \
+                                       --data 'full_description=full-description' \
+                                       --data 'is_private=false' \
+                                       --data 'name=test' \
+                                       --data "namespace=${UNAME}"
       - name: List directory contents
         run: ls -R
       - name: Build the Docker image
