@@ -10,6 +10,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - name: Create Docker Hub repository
+        run: |
+          curl -X POST -H "Content-Type: application/json" \
+               -H "Authorization: JWT ${{secrets.DOCKER_HUB_ACCESS_TOKEN}}" \
+               -d '{"namespace": "${{secrets.DOCKER_USERNAME}}", "name": "libraryfrontend", "is_private": false}' \
+               https://hub.docker.com/v2/repositories/
       - name: List directory contents
         run: ls -R
       - name: Build the Docker image
