@@ -28,7 +28,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ${{ secrets.DOCKER_USERNAME }}/libraryfrontend
+          images: swissi/libraryfrontend
 
       - name: Build and push Docker image
         id: push
@@ -43,6 +43,6 @@ jobs:
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v1
         with:
-          subject-name: ${{ secrets.DOCKER_USERNAME }}/libraryfrontend
+          subject-name: swissi/libraryfrontend
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
