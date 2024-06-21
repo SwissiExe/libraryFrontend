@@ -12,9 +12,9 @@ jobs:
            - uses: actions/checkout@v3
            - name: Build the Docker image
              run: |
-                  docker build . --file Dockerfile --tag libraryFrontend
+                  docker build . --file Dockerfile --tag libraryfrontend
                   docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
-                  docker tag libraryFrontend ${{secrets.DOCKER_USERNAME}}/libraryFrontend
-                  docker push ${{secrets.DOCKER_USERNAME}}/libraryFrontend && echo "✅ Deployed to Docker Hub" || ( echo "❌ Deployment to Docker Hub failed" && exit 1 )
+                  docker tag libraryfrontend ${{secrets.DOCKER_USERNAME}}/libraryfrontend
+                  docker push ${{secrets.DOCKER_USERNAME}}/libraryfrontend && echo "✅ Deployed to Docker Hub" || ( echo "❌ Deployment to Docker Hub failed" && exit 1 )
 
    
