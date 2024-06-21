@@ -11,10 +11,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Create Docker Hub repository
+        env:
+          DOCKER_HUB_ACCESS_TOKEN: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         run: |
           RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" -X POST -H "Content-Type: application/json" \
-               -H "Authorization: JWT ${{secrets.DOCKER_HUB_ACCESS_TOKEN}}" \
-               -d '{"namespace": "${{secrets.DOCKER_USERNAME}}", "name": "libraryfrontend", "is_private": false}' \
+               -H "Authorization: JWT $DOCKER_HUB_ACCESS_TOKEN" \
+               -d '{"namespace": "'$DOCKER_USERNAME'", "name": "libraryfrontend", "is_private": false}' \
                https://hub.docker.com/v2/repositories/)
           if [ $RESPONSE -ne 201 ]; then
             echo "Failed to create Docker Hub repository, status code: $RESPONSE"
@@ -23,8 +26,11 @@ jobs:
       - name: List directory contents
         run: ls -R
       - name: Build the Docker image
+        env:
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         run: |
           docker build -f ./docker/Dockerfile .  # Specify the build context (current directory)
-          echo "${{secrets.DOCKER_PASSWORD}}" | docker login --username "${{secrets.DOCKER_USERNAME}}" --password-stdin
-          docker tag libraryfrontend ${{secrets.DOCKER_USERNAME}}/libraryfrontend
-          docker push ${{secrets.DOCKER_USERNAME}}/libraryfrontend && echo "✅ Deployed to Docker Hub" || ( echo "❌ Deployment to Docker Hub failed" && exit 1 )
+          echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin
+          docker tag libraryfrontend $DOCKER_USERNAME/libraryfrontend
+          docker push $DOCKER_USERNAME/libraryfrontend && echo "✅ Deployed to Docker Hub" || ( echo "❌ Deployment to Docker Hub failed" && exit 1 )
