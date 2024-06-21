@@ -9,6 +9,7 @@ jobs:
   docker-build:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
       - name: Create Docker Hub repository
         env:
           DOCKER_HUB_ACCESS_TOKEN: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
@@ -27,6 +28,6 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         run: |
           docker build -t libraryfrontend:latest -f ./docker/Dockerfile .  # Specify the build context (current directory) and tag the built image
-          docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
-          docker tag libraryfrontend:latest libraryfrontend:latest
-          docker push libraryfrontend:latest && echo "✅ Deployed to Docker Hub" || ( echo "❌ Deployment to Docker Hub failed" && exit 1 )
+          echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin
+          docker tag libraryfrontend:latest $DOCKER_USERNAME/libraryfrontend:latest
+          docker push $DOCKER_USERNAME/libraryfrontend:latest && echo "✅ Deployed to Docker Hub" || ( echo "❌ Deployment to Docker Hub failed" && exit 1 )
