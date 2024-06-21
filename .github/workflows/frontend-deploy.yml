@@ -22,7 +22,8 @@ jobs:
         env:
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-        run: docker login -u $DOCKER_USERNAME --password-stdin $DOCKER_PASSWORD
+        run:
+          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
 
       - name: Create Docker Hub repository (if it does not exist)
         env:
