@@ -10,6 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - name: Set up Docker Build Context
+        run: |
+          mkdir -p libraryfrontend
+          cp -r * libraryfrontend/
       - name: Build the Docker image
         run: |
           cd libraryfrontend
