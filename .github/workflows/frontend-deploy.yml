@@ -26,8 +26,8 @@ jobs:
         run: ls -R
       - name: Build the Docker image
         env:
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          username: ${{ secrets.DOCKER_USERNAME }}
         run: |
           docker build -f ./docker/Dockerfile .  # Specify the build context (current directory)
           docker login --username "$DOCKER_USERNAME" --password "$DOCKER_PASSWORD" --password-stdin "$DOCKER_PASSWORD"
