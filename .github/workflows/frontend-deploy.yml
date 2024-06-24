@@ -29,17 +29,17 @@ jobs:
 
   push-to-gcr:
     runs-on: ubuntu-latest
-    needs: docker  # Remove this line if not needed for other dependencies
+    needs: docker  # This job depends on a successful build in the "docker" job
     steps:
       - name: Set up Google Cloud authentication
         uses: google-github-actions/auth@v2
         with:
-          credentials_json: ${{ secrets.GCP_TOKEN }}
+          credentials_json: ${{ secrets.GCP_TOKEN }}  # Replace with path to your service account key file
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
-      - name: Build and push in GCR
+      - name: Push to GCR
         uses: docker/build-push-action@v6
+        # We don't need to build here, so remove "file" and "context" options
         with:
           push: true
           tags: gcr.io/${{ secrets.GCP_PROJECT_ID }}/swissiexe/library_management:latest,v1
-          file: ./docker/Dockerfile
