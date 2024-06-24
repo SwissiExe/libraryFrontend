@@ -40,5 +40,6 @@ jobs:
       - name: Push to GCR
         env:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
-        run:
-          docker push gcr.io/${project_id}/swissiexe/library_management:latest &&\
+        run: |  
+          docker push gcr.io/${project_id}/swissiexe/library_management:latest && \
+          docker push gcr.io/${project_id}/swissiexe/library_management:v1
