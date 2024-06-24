@@ -40,7 +40,7 @@ jobs:
       - name: Push to GCR
         uses: Industrial/push-docker-gcr
         with:
-          docker_image_name: swissiexe/library_management:latest
+          docker_image_name: swissiexe/library_management
           docker_image_tag: latest
           gcr_host: gcr.io
           gcr_project_id: ${{ secrets.GCP_PROJECT_ID }}
