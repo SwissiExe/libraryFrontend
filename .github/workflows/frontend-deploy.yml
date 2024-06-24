@@ -43,4 +43,4 @@ jobs:
           push: true
           tags: gcr.io/${{ secrets.GCP_PROJECT_ID }}/swissiexe/library_management:latest,v1
           file: ./docker/Dockerfile
-          context: ./docker
+          context: .
