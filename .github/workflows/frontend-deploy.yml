@@ -28,15 +28,13 @@ jobs:
           file: ./docker/Dockerfile
 
   push-to-gcr:
-    needs: docker
     runs-on: ubuntu-latest
     steps:
       - name: Set up Google Cloud authentication
         uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.GCP_TOKEN }}  # Replace with path to your service account credentials file
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          # Replace with your Google Cloud project ID
+          project_id: ${{ secrets.GCP_PROJECT_ID }}  # Replace with your Google Cloud project ID
       - name: 'Set up Cloud SDK'
         uses: google-github-actions/setup-gcloud@v2
 
