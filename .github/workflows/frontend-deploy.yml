@@ -42,4 +42,5 @@ jobs:
         # We don't need to build here, so remove "file" and "context" options
         with:
           push: true
+          file: ./docker/Dockerfile
           tags: gcr.io/${{ secrets.GCP_PROJECT_ID }}/swissiexe/library_management:latest,v1
