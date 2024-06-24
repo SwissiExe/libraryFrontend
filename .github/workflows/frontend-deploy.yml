@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Login to Docker Hubs
-        run: docker login -p ${{ secrets.DOCKERHUB_TOKEN }} -u ${{ secrets.DOCKERHUB_USER }}
+        run: docker login --password-stdin ${{ secrets.DOCKERHUB_TOKEN }} -u ${{ secrets.DOCKERHUB_USER }}
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       -
