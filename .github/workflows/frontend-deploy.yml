@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  docker-build:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: login Docker
@@ -15,24 +15,35 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
         run:
           docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
-      - uses: actions/checkout@v3
-      - name: Create Docker Hub repository
-        env:
-          DOCKER_HUB_ACCESS_TOKEN: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        run: |
-          TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d '{"username": "'${DOCKERHUB_USERNAME}'", "password": "'${DOCKERHUB_TOKEN}'"}' https://hub.docker.com/v2/users/login/ | jq -r .token)
-          curl -s -H "Authorization: JWT ${TOKEN}" -H "Content-Type: application/json" -X POST \
-               -d "{\"namespace\":\"${DOCKER_USERNAME}\",\"name\":\"libraryfrontend\",\"is_private\":false,\"description\":\"test\",\"full_description\":\"full-description\"}" \
-               https://hub.docker.com/v2/repositories/
-      - name: List directory contents
-        run: ls -R
-      - name: Build the Docker image
-        env:
-          DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
-          DOCKER_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-        run: |
-          docker build -t libraryfrontend:latest -f ./docker/Dockerfile .  # Specify the build context (current directory) and tag the built image
-          docker tag libraryfrontend:latest libraryfrontend:latest
-          docker push libraryfrontend:latest && echo "✅ Deployed to Docker Hub" || ( echo "❌ Deployment to Docker Hub failed" && exit 1 )
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install cosign
+        if: github.event_name != 'pull_request'
+        uses: sigstore/cosign-installer@f3c664df7af409cb4873aa5068053ba9d61a57b6 #v2.6.0
+        with:
+          cosign-release: 'v1.11.0'
+
+      - name: Log into registry ${{ env.REGISTRY }}
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@28218f9b04b4f3f62068d7b6ce6ca5b26e35336c
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.DOCKER_GITHUB_TOKEN }}
+      - name: Extract Docker metadata
+        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        id: meta
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        id: build-and-push
+        with:
+          context: "{{defaultContext}}:src"
+          push: ${{ github.event_name != 'pull_request' }} # Don't push on PR
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
