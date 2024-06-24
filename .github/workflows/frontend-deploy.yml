@@ -39,7 +39,7 @@ jobs:
         with:
           # gcloud_service_key: ${{ secrets.GCLOUD_SERVICE_KEY }} # can be base64 encoded or plain text || not needed if you use google-github-actions/auth
           registry: gcr.io
-          project_id: ${{ secrets.GCP_PROJECT_ID }
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
           image_name: backend
           image_tag: latest,v1
           dockerfile: ./docker/Dockerfile
