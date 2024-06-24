@@ -24,8 +24,8 @@ jobs:
         run: ls -R
       - name: Build the Docker image
         env:
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
+          DOCKER_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
         run: |
           docker build -t libraryfrontend:latest -f ./docker/Dockerfile .  # Specify the build context (current directory) and tag the built image
           docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
