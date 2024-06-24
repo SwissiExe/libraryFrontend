@@ -38,11 +38,5 @@ jobs:
           project_id: ${{ secrets.GCP_PROJECT_ID }}  # Replace with your Google Cloud project ID
 
       - name: Push to GCR
-        uses: RafikFarhad/push-to-gcr-github-action@v5-rc1
-        with:
-          registry: gcr.io
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          image_name: backend
-          image_tag: latest,v1
-          dockerfile: ./docker/Dockerfile
-          context: ./docker
+        run:
+          docker push gcr.io/${PROJECT_ID}/swissiexe/library_management:latest &&\
