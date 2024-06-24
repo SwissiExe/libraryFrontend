@@ -32,10 +32,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Set up Google Cloud authentication
-        uses: google-tools/setup-gcloud@v1
+        uses: google-github-actions/auth@v2
         with:
-          service_account_key_file: ${{ secrets.GCP_TOKEN }}  # Replace with path to your service account credentials file
-          project_id: ${{ secrets.GCP_PROJECT_ID }}  # Replace with your Google Cloud project ID
+          credentials_json: ${{ secrets.GCP_TOKEN }}  # Replace with path to your service account credentials file
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          # Replace with your Google Cloud project ID
+      - name: 'Set up Cloud SDK'
+        uses: google-github-actions/setup-gcloud@v2
 
       - name: Pull image from Docker Hub
         run: docker pull swissiexe/library_management:latest
