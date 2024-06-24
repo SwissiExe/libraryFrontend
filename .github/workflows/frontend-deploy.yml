@@ -37,7 +37,7 @@ jobs:
           credentials_json: ${{ secrets.GCP_TOKEN }}
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
-      - name: Build and push to GCR
+      - name: Build and push in GCR
         uses: docker/build-push-action@v6
         with:
           push: true
