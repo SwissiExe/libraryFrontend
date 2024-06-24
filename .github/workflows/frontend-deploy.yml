@@ -38,10 +38,7 @@ jobs:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
       - name: Push to GCR
-        uses: Industrial/push-docker-gcr
+        uses: docker/build-push-action@v6
         with:
-          docker_image_name: swissiexe/library_management
-          docker_image_tag: latest
-          gcr_host: gcr.io
-          gcr_project_id: ${{ secrets.GCP_PROJECT_ID }}
-          gcr_service_key: ${{ secrets.GOOGLE_API_KEY }}
+          push: true
+          tags: gcr.io/${{ secrets.GCP_PROJECT_ID }}/swissiexe/library_management:latest,v1
