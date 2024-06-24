@@ -38,13 +38,10 @@ jobs:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
       - name: Push to GCR
-        uses: Miragon/docker-cloud-build@v1.0.1
+        uses: Industrial/push-docker-gcr
         with:
-          gcp-project-id: ${{ secrets.GCP_PROJECT_ID }}
-          gcp-service-account-key: "${{ secrets.GOOGLE_API_KEY }}"
-          gcp-cloud-storage-bucket: my-project-id_cloudbuild
-          gcp-gcr-region: eu.gcr.io
-          image-name: LibraryManagementFrontend
-          image-sources: ./docker/Dockerfile
-          image-tag-latest: true
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          docker_image_name: swissiexe/library_management:latest
+          docker_image_tag: latest
+          gcr_host: gcr.io
+          gcr_project_id: ${{ secrets.GCP_PROJECT_ID }}
+          gcr_service_key: ${{ secrets.GOOGLE_API_KEY }}
