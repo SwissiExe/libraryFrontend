@@ -28,7 +28,7 @@ jobs:
           file: ./docker/Dockerfile
 
   push-to-gcr:
-    needs: build-to-docker-hub
+    needs: docker
     runs-on: ubuntu-latest
     steps:
       - name: Set up Google Cloud authentication
