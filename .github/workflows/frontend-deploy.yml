@@ -35,11 +35,12 @@ jobs:
         with:
           credentials_json: ${{ secrets.GCP_TOKEN }}  # Replace with path to your service account credentials file
           project_id: ${{ secrets.GCP_PROJECT_ID }}  # Replace with your Google Cloud project ID
-      - name: 'Set up Cloud SDK'
-        uses: google-github-actions/setup-gcloud@v2
-
-      - name: Pull image from Docker Hub
-        run: docker pull swissiexe/library_management:latest
-
-      - name: Push image to GCR
-        run: docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/swissiexe/library_management:latest
+      - uses: RafikFarhad/push-to-gcr-github-action@v5-rc1
+        with:
+          # gcloud_service_key: ${{ secrets.GCLOUD_SERVICE_KEY }} # can be base64 encoded or plain text || not needed if you use google-github-actions/auth
+          registry: gcr.io
+          project_id: ${{ secrets.GCP_PROJECT_ID }
+          image_name: backend
+          image_tag: latest,v1
+          dockerfile: ./docker/Dockerfile
+          context: ./docker
