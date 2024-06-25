@@ -31,18 +31,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Login to AWS ECR
-        uses: GlueOps/github-actions-build-push-containers@v0.3.7
+        uses: GlueOps/github-actions-build-push-containers@v0.3.7  # Consider using an action with active maintenance
         with:
-          file: ./docker/Dockerfile
           aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}  # Replace with your AWS credentials
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           region: ${{ secrets.AWS_DEFAULT_REGION }}  # Optional, use default region if not specified
 
       - name: Pull image from Docker Hub
-        run: docker pull swissiexe/library_management:latest
+        run: docker pull ghcr.io/swissiexe/libraryfrontend:main  # Adjust the image name and tag if needed
 
       - name: Tag the image for ECR
-        run: docker tag swissiexe/library_management:latest ${{ secrets.AWS_ACC_ID }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com/swissiexe/library_management:latest
+        run: docker tag ghcr.io/swissiexe/libraryfrontend:main ${{ secrets.AWS_ACC_ID }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com/ghcr.io/swissiexe/libraryfrontend:main
 
       - name: Push the image to ECR
-        run: docker push ${{ secrets.AWS_ACC_ID }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com/swissiexe/library_management:latest
+        run: docker push ${{ secrets.AWS_ACC_ID }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com/ghcr.io/swissiexe/libraryfrontend:main
