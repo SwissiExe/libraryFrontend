@@ -28,6 +28,8 @@ jobs:
           file: ./docker/Dockerfile
 
   pull-from-ghcr-and-push-to-ecr:
+    permissions:
+      packages: write
     runs-on: ubuntu-latest
     steps:
       - name: Configure AWS credentials
