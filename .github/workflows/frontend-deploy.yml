@@ -33,6 +33,7 @@ jobs:
       - name: Login to AWS ECR
         uses: GlueOps/github-actions-build-push-containers@v0.3.7
         with:
+          file: ./docker/Dockerfile
           aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}  # Replace with your AWS credentials
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           region: ${{ secrets.AWS_DEFAULT_REGION }}  # Optional, use default region if not specified
