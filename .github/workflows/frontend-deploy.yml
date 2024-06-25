@@ -37,11 +37,15 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}  # Use your default region
 
-      - name: Login to GHCR (replace with appropriate action if needed)
-        uses: ghcr/auth-action@v1.1.0  # Consider alternative actions based on GHCR authentication method
+      - name: Login to GitHub Container registry
+        uses: docker/login-action@v1
+        env:
+          GITHUB_USER: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          username: ${{ secrets.GHCR_USERNAME }}
-          password: ${{ secrets.GHCR_TOKEN }}
+          registry: ghcr.io
+          username: $GITHUB_USER
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Pull image from GHCR
         run: docker pull ghcr.io/SwissiExe/libraryFrontend:latest  # Adjust organization and image name
