@@ -8,6 +8,9 @@ on:
 jobs:
   build-and-push-to-docker-hub:
     runs-on: ubuntu-latest
+    outputs:
+      commit-hash: ${{ steps.get-commit-hash.outputs.commit-hash }}
+      timestamp: ${{ steps.get-timestamp.outputs.timestamp }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
@@ -18,10 +21,18 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
+      - name: Get Short Commit Hash
+        id: get-commit-hash
+        run: echo "::set-output name=commit-hash::$(git rev-parse --short HEAD)"
+
+      - name: Get Timestamps
+        id: get-timestamp
+        run: echo "::set-output name=timestamp::$(date +'%Y-%m-%d-%H-%M')"
+
       - name: Build and Push Docker Image to Docker Hub
         env:
           DOCKER_HUB_REPO: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.REPO_NAME }}
-          IMAGE_TAG: latest
+          IMAGE_TAG: ${{ steps.get-commit-hash.outputs.commit-hash }}-${{ steps.get-timestamp.outputs.timestamp }}
         run: |
           echo "Building the Docker image..."
           docker build -t $DOCKER_HUB_REPO:$IMAGE_TAG -f ./docker/Dockerfile .
@@ -52,7 +63,7 @@ jobs:
       - name: Pull Docker Image from Docker Hub
         env:
           DOCKER_HUB_REPO: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.REPO_NAME }}
-          IMAGE_TAG: latest
+          IMAGE_TAG: ${{ needs.build-and-push-to-docker-hub.outputs.commit-hash }}-${{ needs.build-and-push-to-docker-hub.outputs.timestamp }}
         run: |
           echo "Pulling the Docker image from Docker Hub..."
           docker pull $DOCKER_HUB_REPO:$IMAGE_TAG
