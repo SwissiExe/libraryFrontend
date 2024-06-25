@@ -45,7 +45,7 @@ jobs:
           username: $GITHUB_USER
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Docker Build
-        run: docker buildx build ./docker/Dockerfile
+        run: docker buildx build -t ./docker/Dockerfile
 
       - name: Docker Push
         run: docker push  ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
