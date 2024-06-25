@@ -27,7 +27,25 @@ jobs:
           tags: swissiexe/library_management:latest
           file: ./docker/Dockerfile
 
+  build_and_publish:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Docker Login
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.REGISTRY }} --username cloud-native-everything --password-stdin
+
+      - name: Docker Build
+        run: docker build -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} .
+
+      - name: Docker Push
+        run: docker push  ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
   pull-from-ghcr-and-push-to-ecr:
+    needs: build_and_publish
     permissions:
       packages: write
     runs-on: ubuntu-latest
@@ -48,10 +66,6 @@ jobs:
           registry: ghcr.io
           username: $GITHUB_USER
           password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Pull image from GHCR
-        run: docker push ghcr.io/swissiexe/libraryfrontend:latest  # Adjust organization and image name
-
 
       - name: Pull image from GHCR
         run: docker pull ghcr.io/swissiexe/libraryfrontend:latest  # Adjust organization and image name
