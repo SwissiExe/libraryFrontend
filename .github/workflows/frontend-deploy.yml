@@ -48,6 +48,10 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Pull image from GHCR
+        run: docker push ghcr.io/swissiexe/libraryfrontend:latest  # Adjust organization and image name
+
+
+      - name: Pull image from GHCR
         run: docker pull ghcr.io/swissiexe/libraryfrontend:latest  # Adjust organization and image name
 
       - name: Tag the image for ECR
