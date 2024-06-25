@@ -17,7 +17,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}  # Use your default AWS region
+          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Login to Amazon ECR
         id: login-pf-aws-ecr
@@ -27,18 +27,23 @@ jobs:
 
       - name: Get Short Commit Hash
         id: get-commit-hash
-        run: echo "::set-output name=commit-hash::$(git rev-parse --short HEAD)"
+        run: echo "commit-hash=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
-      - name: Build and push the tagged docker image to Amazon ECR
-        id: containerImage
+      - name: Get Timestamps
+        id: get-timestamp
+        run: echo "timestamp=$(date +'%Y-%m-%d-%H-%M')" >> $GITHUB_ENV
+
+      - name: Build and Push Docker Image to Amazon ECR
         env:
           ECR_REGISTRY: ${{ steps.login-pf-aws-ecr.outputs.registry }}
-          ECR_REPOSITORY: ${{secrets.REPO_NAME}}
+          ECR_REPOSITORY: ${{ secrets.REPO_NAME }}
           IMAGE_TAG: latest
         run: |
+          echo "Building the Docker image..."
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f ./docker/Dockerfile .
+          echo "Pushing the Docker image..."
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
-          - name: ECR Status Check
-            if: steps.containerImage.outcome == 'failure'
-            run: exit 1
+      - name: ECR Status Check
+        if: failure()
+        run: exit 1
