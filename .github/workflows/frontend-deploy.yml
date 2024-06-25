@@ -18,18 +18,10 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
-      - name: Get Short Commit Hash
-        id: get-commit-hash
-        run: echo "commit-hash=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
-
-      - name: Get Timestamps
-        id: get-timestamp
-        run: echo "timestamp=$(date +'%Y-%m-%d-%H-%M')" >> $GITHUB_ENV
-
       - name: Build and Push Docker Image to Docker Hub
         env:
           DOCKER_HUB_REPO: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.REPO_NAME }}
-          IMAGE_TAG: ${{ env.commit-hash }}-${{ env.timestamp }}
+          IMAGE_TAG: latest
         run: |
           echo "Building the Docker image..."
           docker build -t $DOCKER_HUB_REPO:$IMAGE_TAG -f ./docker/Dockerfile .
@@ -60,7 +52,7 @@ jobs:
       - name: Pull Docker Image from Docker Hub
         env:
           DOCKER_HUB_REPO: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.REPO_NAME }}
-          IMAGE_TAG: ${{ needs.build-and-push-to-docker-hub.outputs.commit-hash }}-${{ needs.build-and-push-to-docker-hub.outputs.timestamp }}
+          IMAGE_TAG: latest
         run: |
           echo "Pulling the Docker image from Docker Hub..."
           docker pull $DOCKER_HUB_REPO:$IMAGE_TAG
