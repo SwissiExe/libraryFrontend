@@ -45,10 +45,10 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Pull image from GHCR
-        run: docker pull ghcr.io/swissiexe/libraryfrontend:latest
+        run: docker pull ghcr.io/SwissiExe/libraryFrontend:latest
 
       - name: Tag the image for ECR
-        run: docker tag ghcr.io/swissiexe/libraryfrontend:latest ${{ secrets.AWS_ACC_ID }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com/swissiexe/libraryfrontend:latest
+        run: docker tag ghcr.io/SwissiExe/libraryFrontend:latest ${{ secrets.AWS_ACC_ID }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com/swissiexe/libraryfrontend:latest
 
       - name: Push the image to ECR
         run: docker push ${{ secrets.AWS_ACC_ID }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com/swissiexe/libraryfrontend:latest
