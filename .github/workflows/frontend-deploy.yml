@@ -38,10 +38,10 @@ jobs:
           aws-region: us-east-1
 
       - name: Pull image from Docker Hub
-        run: docker pull ghcr.io/swissiexe/libraryfrontend:main  # Adjust the image name and tag if needed
+        run: docker pull ghcr.io/swissiexe/libraryfrontend:latest  # Adjust the image name and tag if needed
 
       - name: Tag the image for ECR
-        run: docker tag ghcr.io/swissiexe/libraryfrontend:main ${{ secrets.AWS_ACC_ID }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com/ghcr.io/swissiexe/libraryfrontend:main
+        run: docker tag ghcr.io/swissiexe/libraryfrontend:latest ${{ secrets.AWS_ACC_ID }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com/ghcr.io/swissiexe/libraryfrontend:latest
 
       - name: Push the image to ECR
-        run: docker push ${{ secrets.AWS_ACC_ID }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com/ghcr.io/swissiexe/libraryfrontend:main
+        run: docker push ${{ secrets.AWS_ACC_ID }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com/ghcr.io/swissiexe/libraryfrontend:latest
