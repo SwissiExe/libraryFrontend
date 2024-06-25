@@ -28,7 +28,7 @@ jobs:
 
       - name: Build and Push Docker Image to Docker Hub
         env:
-          DOCKER_HUB_REPO: ${{ secrets.DOCKER_USERNAME }}/repository-name
+          DOCKER_HUB_REPO: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.REPO_NAME }}
           IMAGE_TAG: ${{ env.commit-hash }}-${{ env.timestamp }}
         run: |
           echo "Building the Docker image..."
