@@ -70,7 +70,7 @@ jobs:
           echo "Pulling the Docker image from Docker Hub..."
           docker pull $DOCKER_HUB_REPO:$IMAGE_TAG
 
-      - name: Tag and Push Docker Image to Amazon ECRs
+      - name: Tag and Push Docker Image to Amazon ECR
         env:
           ECR_REGISTRY: public.ecr.aws/r9f0w2i7
           ECR_REPOSITORY: libraryfrontend
