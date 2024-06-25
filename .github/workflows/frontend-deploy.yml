@@ -31,7 +31,7 @@ jobs:
     runs-on: ubuntu-latest # This job depends on successful build in the previous job
     steps:
       - name: Login to AWS ECR
-        uses: aws/ecr-docker-login@v2
+        uses: GlueOps/github-actions-build-push-containers@v0.3.7
         with:
           aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}  # Replace with your AWS credentials
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
