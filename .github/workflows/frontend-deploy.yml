@@ -33,7 +33,7 @@ jobs:
         id: get-timestamp
         run: echo "timestamp=$(date +'%Y-%m-%d-%H-%M')" >> $GITHUB_ENV
 
-      - name: Build and Push Docker Image to Amazon ECR
+      - name: Build and Push Docker Image to Amazon ECRs
         env:
           ECR_REGISTRY: ${{ steps.login-pf-aws-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ secrets.REPO_NAME }}
@@ -42,7 +42,7 @@ jobs:
           echo "Building the Docker image..."
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f ./docker/Dockerfile .
           echo "Pushing the Docker image..."
-          docker push r9f0w2i7/$ECR_REPOSITORY:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
       - name: ECR Status Check
         if: failure()
