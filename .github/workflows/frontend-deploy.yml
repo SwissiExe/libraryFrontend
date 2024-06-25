@@ -28,7 +28,7 @@ jobs:
           file: ./docker/Dockerfile
 
   pull-from-docker-hub-and-push-to-ecr:
-    runs-on: ubuntu-latest # This job depends on successful build in the previous job
+    runs-on: ubuntu-latest
     steps:
       - name: Login to AWS ECR
         uses: GlueOps/github-actions-build-push-containers@v0.3.7
