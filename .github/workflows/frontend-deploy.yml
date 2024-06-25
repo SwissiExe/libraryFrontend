@@ -30,12 +30,12 @@ jobs:
   pull-from-docker-hub-and-push-to-ecr:
     runs-on: ubuntu-latest
     steps:
-      - name: Login to AWS ECR
-        uses: GlueOps/github-actions-build-push-containers@v0.3.7  # Consider using an action with active maintenance
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}  # Replace with your AWS credentials
-          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          region: ${{ secrets.AWS_DEFAULT_REGION }}  # Optional, use default region if not specified
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
       - name: Pull image from Docker Hub
         run: docker pull ghcr.io/swissiexe/libraryfrontend:main  # Adjust the image name and tag if needed
