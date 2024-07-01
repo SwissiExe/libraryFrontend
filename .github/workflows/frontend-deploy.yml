@@ -94,6 +94,11 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Update ECS Service with new Image Tag
+        env:
+          ECR_REGISTRY: public.ecr.aws/r9f0w2i7
+          ECR_REPOSITORY: libraryfrontend
+          DOCKER_HUB_REPO: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.REPO_NAME }}
+          IMAGE_TAG: ${{ needs.build-and-push-to-docker-hub.outputs.commit-hash }}-${{ needs.build-and-push-to-docker-hub.outputs.timestamp }}
         uses: aws-actions/aws-ecs-run-task@v1  # This action might need additional configuration based on your setup
         with:
           cluster: library_Management
