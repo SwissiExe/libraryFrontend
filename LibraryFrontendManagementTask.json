@@ -1,0 +1,17 @@
+{
+  "family": "library_Management",
+  "taskRoleArn": "arn:aws:iam::YOUR_ACCOUNT_ID:role/ecsTaskExecutionRole",
+  "containerDefinitions": [
+    {
+      "name": "library_Management",
+      "image": "public.ecr.aws/r9f0w2i7/libraryfrontend",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 80,
+          "hostPort": 80
+        }
+      ]
+    }
+  ]
+}

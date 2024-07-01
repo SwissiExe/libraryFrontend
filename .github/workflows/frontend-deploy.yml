@@ -96,8 +96,8 @@ jobs:
       - name: Update ECS Service with new Image Tag
         uses: aws-actions/aws-ecs-run-task@v1  # This action might need additional configuration based on your setup
         with:
-          cluster: library_Management  # Replace with your ECS cluster name
-          task-definition: LibraryFrontendManagementTask  # Replace with your ECS task definition
-          launchType: FARGATE  # Adjust launch type if needed
+          cluster: library_Management
+          task-definition: LibraryFrontendManagementTask:1
+          launchType: FARGATE
           image: $ECR_REGISTRY/$ECR_REPOSITORY:${{ needs.build-and-push-to-docker-hub.outputs.commit-hash }}-${{ needs.build-and-push-to-docker-hub.outputs.timestamp }}  # Use image from previous job
 
