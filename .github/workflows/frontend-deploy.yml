@@ -84,7 +84,7 @@ jobs:
 
   deploy-to-ecs:
     runs-on: ubuntu-latest
-    needs: build-and-push-to-docker-hub
+    needs: pull-from-docker-hub-and-push-to-ecr
     steps:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
