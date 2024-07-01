@@ -65,7 +65,7 @@ jobs:
       - name: Pull Docker Image from Docker Hub
         env:
           DOCKER_HUB_REPO: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.REPO_NAME }}
-          IMAGE_TAG: latest
+          IMAGE_TAG: ${{ needs.build-and-push-to-docker-hub.outputs.commit-hash }}-${{ needs.build-and-push-to-docker-hub.outputs.timestamp }}
         run: |
           echo "Pulling the Docker image from Docker Hub..."
           docker pull $DOCKER_HUB_REPO:$IMAGE_TAG
@@ -75,7 +75,7 @@ jobs:
           ECR_REGISTRY: public.ecr.aws/r9f0w2i7
           ECR_REPOSITORY: libraryfrontend
           DOCKER_HUB_REPO: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.REPO_NAME }}
-          IMAGE_TAG: latest
+          IMAGE_TAG: ${{ needs.build-and-push-to-docker-hub.outputs.commit-hash }}-${{ needs.build-and-push-to-docker-hub.outputs.timestamp }}
         run: |
           echo "Tagging the Docker image..."
           docker tag $DOCKER_HUB_REPO:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
@@ -99,5 +99,5 @@ jobs:
           cluster: library_Management  # Replace with your ECS cluster name
           task-definition: LibraryFrontendManagementTask  # Replace with your ECS task definition
           launchType: FARGATE  # Adjust launch type if needed
-          image: $ECR_REGISTRY/$ECR_REPOSITORY:latest  # Use image from previous job
+          image: $ECR_REGISTRY/$ECR_REPOSITORY:${{ needs.build-and-push-to-docker-hub.outputs.commit-hash }}-${{ needs.build-and-push-to-docker-hub.outputs.timestamp }}  # Use image from previous job
 
