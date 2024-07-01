@@ -65,7 +65,7 @@ jobs:
       - name: Pull Docker Image from Docker Hub
         env:
           DOCKER_HUB_REPO: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.REPO_NAME }}
-          IMAGE_TAG: ${{ needs.build-and-push-to-docker-hub.outputs.commit-hash }}-${{ needs.build-and-push-to-docker-hub.outputs.timestamp }}
+          IMAGE_TAG: latest
         run: |
           echo "Pulling the Docker image from Docker Hub..."
           docker pull $DOCKER_HUB_REPO:$IMAGE_TAG
@@ -75,7 +75,7 @@ jobs:
           ECR_REGISTRY: public.ecr.aws/r9f0w2i7
           ECR_REPOSITORY: libraryfrontend
           DOCKER_HUB_REPO: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.REPO_NAME }}
-          IMAGE_TAG: ${{ needs.build-and-push-to-docker-hub.outputs.commit-hash }}-${{ needs.build-and-push-to-docker-hub.outputs.timestamp }}
+          IMAGE_TAG: latest
         run: |
           echo "Tagging the Docker image..."
           docker tag $DOCKER_HUB_REPO:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
@@ -96,8 +96,8 @@ jobs:
       - name: Update ECS Service with new Image Tag
         uses: aws-actions/aws-ecs-run-task@v1  # This action might need additional configuration based on your setup
         with:
-          cluster: YOUR_ECS_CLUSTER_NAME  # Replace with your ECS cluster name
-          task-definition: YOUR_ECS_TASK_DEFINITION  # Replace with your ECS task definition
+          cluster: library_Management  # Replace with your ECS cluster name
+          task-definition: LibraryFrontendManagementTask  # Replace with your ECS task definition
           launchType: FARGATE  # Adjust launch type if needed
-          image: $ECR_REGISTRY/$ECR_REPOSITORY:${{ needs.build-and-push-to-docker-hub.outputs.commit-hash }}-${{ needs.build-and-push-to-docker-hub.outputs.timestamp }}  # Use image from previous job
+          image: $ECR_REGISTRY/$ECR_REPOSITORY:latest  # Use image from previous job
 
