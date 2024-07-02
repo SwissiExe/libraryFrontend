@@ -84,10 +84,6 @@ jobs:
 
   deploy-to-ecs:
     runs-on: ubuntu-latest
-    env:
-      EC2_SSH_PRIVATE_KEY: ${{ secrets.AWS_PRIVATE_KEY }}
-      EC2_URL: 3.94.101.168
-      EC2_USERNAME: swissiexe
     needs: build-and-push-to-docker-hub
     steps:
       - name: Log in to Docker Hub
@@ -95,20 +91,17 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
-
       - name: Deploy to EC2
-        uses: omarhosny206/setup-ssh-for-ec2@v1.0.0
-        with:
-          EC2_SSH_PRIVATE_KEY: $EC2_SSH_PRIVATE_KEY
-          EC2_URL: $EC2_URL
-
-      - name: Deploy to EC2 Image
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           COMMIT_HASH: ${{ needs.build-and-push-to-docker-hub.outputs.commit-hash }}
           TIMESTAMP: ${{ needs.build-and-push-to-docker-hub.outputs.timestamp }}
+          EC2_SSH_PRIVATE_KEY: ${{ secrets.AWS_PRIVATE_KEY }}
+          EC2_URL: 3.94.101.168
+          EC2_USERNAME: swissiexe
         run: |
-            ssh -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_URL
+          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+          ssh -o StrictHostKeyChecking=no -i private_key ${EC2_USERNAME}@${EC2_URL} '
             sudo docker pull $DOCKER_USERNAME/libraryfrontend:$COMMIT_HASH-$TIMESTAMP &&
             sudo docker stop cddemo || true &&
             sudo docker rm cddemo || true &&
