@@ -92,7 +92,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
-      - name: Set permissions for private keys
+      - name: Set permissions for private key
         env:
           PRIVATE_KEY: ${{ secrets.AWS_PRIVATE_KEY }}
           USER_NAME: swissiexe
