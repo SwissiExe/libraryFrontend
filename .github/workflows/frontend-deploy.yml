@@ -27,7 +27,7 @@ jobs:
         env:
           PRIVATE_KEY: ${{ secrets.AWS_PRIVATE_KEY }}
           HOSTNAME: 3.94.101.168
-          USER_NAME: swissiexe
+          USER_NAME: ec2-user
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           COMMIT_HASH: ${{ needs.build-and-push-to-docker-hub.outputs.commit-hash }}
           TIMESTAMP: ${{ needs.build-and-push-to-docker-hub.outputs.timestamp }}
