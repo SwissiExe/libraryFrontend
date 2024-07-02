@@ -7,7 +7,6 @@ on:
 
 jobs:
   deploy-to-ecs:
-    needs: build-and-push-to-docker-hub
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
