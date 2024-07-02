@@ -27,7 +27,7 @@ jobs:
         run: |
           EC2_URL="3.94.101.168"
           EC2_USERNAME="swissiexe"
-          ssh -i private_key -o StrictHostKeyChecking=no ${EC2_USERNAME}@${EC2_URL} echo "SSH connection successful"
+          ssh -i "../../key/GitHubActionsFrontendPrivetKey.pem" ubuntu@3.94.101.168.compute.amazonaws.com
 
       - name: Deploy to EC2
         env:
@@ -37,9 +37,8 @@ jobs:
         run: |
           EC2_URL="3.94.101.168"
           EC2_USERNAME="swissiexe"
-          ssh -i private_key -o StrictHostKeyChecking=no ${EC2_USERNAME}@${EC2_URL} << 'EOF'
+          ssh -i "../../key/GitHubActionsFrontendPrivetKey.pem" ubuntu@3.94.101.168.compute.amazonaws.com
             sudo docker pull $DOCKER_USERNAME/libraryfrontend:${COMMIT_HASH}-${TIMESTAMP}
             sudo docker stop cddemo || true
             sudo docker rm cddemo || true
             sudo docker run -d --name cddemo -p 80:3000 $DOCKER_USERNAME/libraryfrontend:${COMMIT_HASH}-${TIMESTAMP}
-          EOF
