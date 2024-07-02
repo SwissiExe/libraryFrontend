@@ -113,5 +113,5 @@ jobs:
             sudo yum install docker -y
             sudo systemctl start docker
             sudo docker rm $(docker ps -aq)
-            sudo docker run -dp 8000:3000 --name test-app-pls-work ${{ needs.build-and-push-to-docker-hub.outputs.commit-hash }}-${{ needs.build-and-push-to-docker-hub.outputs.timestamp }}
+            sudo docker run -dp 8000:3000 --name test-app-pls-work swissiexe/libraryfrontend:${{ needs.build-and-push-to-docker-hub.outputs.commit-hash }}-${{ needs.build-and-push-to-docker-hub.outputs.timestamp }}
           '
