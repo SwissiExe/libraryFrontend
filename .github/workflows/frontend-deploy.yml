@@ -15,7 +15,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
-      - name: Deploy to EC2
+      - name: Deploy to EC2s
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           COMMIT_HASH: ${{ needs.build-and-push-to-docker-hub.outputs.commit-hash }}
