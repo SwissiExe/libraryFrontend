@@ -98,7 +98,7 @@ jobs:
           USER_NAME: swissiexe
           HOSTNAME: 3.94.101.168
         run: |
-          ssh -i "../../key/GitHubActionsFrontendPrivetKey.pem" ec2-user@ec2-3-94-101-168.compute-1.amazonaws.com'
+          ssh -i "./key/GitHubActionsFrontendPrivetKey.pem" ec2-user@ec2-3-94-101-168.compute-1.amazonaws.com'
 
               sudo docker pull ${{ secrets.DOCKER_USERNAME }}/libraryfrontend:${{ needs.build-and-push-to-docker-hub.outputs.commit-hash }}-${{ needs.build-and-push-to-docker-hub.outputs.timestamp }} &&
               sudo docker stop cddemo || true &&
