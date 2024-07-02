@@ -34,11 +34,7 @@ jobs:
         run: |
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
           ssh -o StrictHostKeyChecking=no -i private_key "${USER_NAME}@${HOSTNAME}" '
-            sudo apt-get update
-            sudo apt-get install -y docker.io
-            sudo systemctl start docker
-            sudo systemctl enable docker
-            sudo usermod -aG docker ${USER_NAME}
+            sudo yum install docker -y
             sudo docker pull $DOCKER_USERNAME/libraryfrontend:c424005-2024-07-02-07-04
             sudo docker stop cddemo || true
             sudo docker rm cddemo || true
