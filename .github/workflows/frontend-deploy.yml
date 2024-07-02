@@ -94,7 +94,7 @@ jobs:
 
       - name: Set permissions for private key
         run: |
-          chmod 600 ./library/key/GitHubActionsFrontendPrivetKey.pem
+          chmod 600 libraryFrontend/key/GitHubActionsFrontendPrivetKey.pem
           ssh-keyscan -H 3.94.101.168 >> ~/.ssh/known_hosts
 
       - name: Deploy to EC2
@@ -103,7 +103,7 @@ jobs:
           COMMIT_HASH: ${{ needs.build-and-push-to-docker-hub.outputs.commit-hash }}
           TIMESTAMP: ${{ needs.build-and-push-to-docker-hub.outputs.timestamp }}
         run: |
-          ssh -i ./library/key/GitHubActionsFrontendPrivetKey.pem ec2-user@3.94.101.168 '
+          ssh -i libraryFrontend/key/GitHubActionsFrontendPrivetKey.pem ec2-user@3.94.101.168 '
             sudo docker pull $DOCKER_USERNAME/libraryfrontend:$COMMIT_HASH-$TIMESTAMP &&
             sudo docker stop cddemo || true &&
             sudo docker rm cddemo || true &&
