@@ -15,7 +15,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
-      - name: Deploy to EC2s
+      - name: Deploy to EC2
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           COMMIT_HASH: ${{ needs.build-and-push-to-docker-hub.outputs.commit-hash }}
@@ -24,9 +24,10 @@ jobs:
           EC2_URL: 3.94.101.168
           EC2_USERNAME: swissiexe
         run: |
-          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
-          ssh -o StrictHostKeyChecking=no -i private_key ${EC2_USERNAME}@${EC2_URL} '
-            sudo docker pull $DOCKER_USERNAME/libraryfrontend:c424005-2024-07-02-07-04 &&
-            sudo docker stop cddemo || true &&
-            sudo docker rm cddemo || true &&
-            sudo docker run -d --name cddemo -p 80:3000 $DOCKER_USERNAME/libraryfrontend:c424005-2024-07-02-07-04
+          echo "${EC2_SSH_PRIVATE_KEY}" > private_key
+          chmod 600 private_key
+          ssh -o StrictHostKeyChecking=no -i private_key ${EC2_USERNAME}@${EC2_URL} << 'EOF'
+            sudo docker pull ${DOCKER_USERNAME}/libraryfrontend:${COMMIT_HASH}-${TIMESTAMP}
+            sudo docker stop cddemo || true
+            sudo docker rm cddemo || true
+            sudo docker run -d --name cddemo -p 80:3000 ${DOCKER_USERNAME}/libraryfrontend:${COMMIT_HASH}-${TIMESTAMP}
