@@ -27,7 +27,7 @@ jobs:
         run: |
           EC2_URL="3.94.101.168"
           EC2_USERNAME="swissiexe"
-          ssh -i "../../key/GitHubActionsFrontendPrivetKey.pem" ubuntu@ec2-3-94-101-168.compute-1.amazonaws.com
+          ssh -i "GitHubActionsFrontendPrivetKey.pem" ubuntu@ec2-3-94-101-168.compute-1.amazonaws.com
 
       - name: Deploy to EC2
         env:
@@ -37,7 +37,7 @@ jobs:
         run: |
           EC2_URL="3.94.101.168"
           EC2_USERNAME="swissiexe"
-          ssh -i "../../key/GitHubActionsFrontendPrivetKey.pem" ubuntu@ec2-3-94-101-168.compute-1.amazonaws.com
+          ssh -i "key/GitHubActionsFrontendPrivetKey.pem" ubuntu@ec2-3-94-101-168.compute-1.amazonaws.com
             sudo docker pull $DOCKER_USERNAME/libraryfrontend:${COMMIT_HASH}-${TIMESTAMP}
             sudo docker stop cddemo || true
             sudo docker rm cddemo || true
