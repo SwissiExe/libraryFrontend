@@ -39,5 +39,5 @@ jobs:
             sudo docker pull $DOCKER_USERNAME/libraryfrontend:c424005-2024-07-02-07-04
             sudo docker stop libraryfrontend || true
             sudo docker rm libraryfrontend || true
-            sudo docker run -p 80:3000 $DOCKER_USERNAME/libraryfrontend:c424005-2024-07-02-07-04
+            sudo docker run -p 80:3000 swissiexe/libraryfrontend:c424005-2024-07-02-07-04
           '
