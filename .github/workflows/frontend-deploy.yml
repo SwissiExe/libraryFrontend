@@ -25,6 +25,8 @@ jobs:
 
       - name: Verify SSH connection
         run: |
+          EC2_URL="3.94.101.168"
+          EC2_USERNAME="swissiexe"
           ssh -i private_key -o StrictHostKeyChecking=no ${EC2_USERNAME}@${EC2_URL} echo "SSH connection successful"
 
       - name: Deploy to EC2
@@ -33,9 +35,10 @@ jobs:
           COMMIT_HASH: ${{ needs.build-and-push-to-docker-hub.outputs.commit-hash }}
           TIMESTAMP: ${{ needs.build-and-push-to-docker-hub.outputs.timestamp }}
         run: |
+          EC2_URL="3.94.101.168"
+          EC2_USERNAME="swissiexe"
           ssh -i private_key -o StrictHostKeyChecking=no ${EC2_USERNAME}@${EC2_URL} << 'EOF'
             sudo docker pull $DOCKER_USERNAME/libraryfrontend:${COMMIT_HASH}-${TIMESTAMP}
             sudo docker stop cddemo || true
             sudo docker rm cddemo || true
             sudo docker run -d --name cddemo -p 80:3000 $DOCKER_USERNAME/libraryfrontend:${COMMIT_HASH}-${TIMESTAMP}
-          EOF
