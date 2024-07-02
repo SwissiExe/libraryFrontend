@@ -102,7 +102,7 @@ jobs:
       - name: Deploy to EC2
         env:
           PRIVATE_KEY: ${{ secrets.AWS_PRIVATE_KEY }}
-          HOSTNAME: eec2-18-208-150-77.compute-1.amazonaws.com
+          HOSTNAME: ec2-18-208-150-77.compute-1.amazonaws.com
           USER_NAME: ec2-user
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           COMMIT_HASH: ${{ needs.build-and-push-to-docker-hub.outputs.commit-hash }}
