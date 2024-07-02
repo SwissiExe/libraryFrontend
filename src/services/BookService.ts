@@ -14,7 +14,7 @@ export interface Book {
 const API_URL = 'http://localhost:8080/api';
 
 export const getAllBooks = async (): Promise<Book[]> => {
-    const response = await fetch(`${API_URL}/get/books`);
+    const response = await fetch(`http://localhost:8080/api/get/books`);
     const books: Book[] = await response.json();
 
     // Convert releaseDate string to Date object

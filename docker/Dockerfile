@@ -1,25 +1,20 @@
 # Use an official Node.js runtime as a parent image
 FROM node:21.7.1
 
-# Set the working directory
+# Set the working directory.
 WORKDIR /app
 
-# Copy the package.json and install dependencies
-COPY package*.json ./
+# Copy the package.json file.
+COPY package.json .
+
+# Install application dependencies.
 RUN npm install
 
-# Copy the rest of the applications
+# Copy the rest of the application files.
 COPY . .
 
-# Build the application
-RUN npm run build
+# Expose the port.
+EXPOSE 3000
 
-# Use an official nginx image to serve the frontend
-FROM nginx:alpine
-COPY --from=0 /app/build /usr/share/nginx/html
-
-# Expose the port nginx is running on
-EXPOSE 80
-
-# Start nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Run the application.
+CMD [“npm”, “start”]
