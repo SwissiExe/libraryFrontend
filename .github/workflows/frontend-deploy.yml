@@ -82,6 +82,7 @@ jobs:
           echo "Pushing the Docker image to Amazon ECR..."
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
   deploy-to-ecs:
+    needs: build-and-push-to-docker-hub
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
