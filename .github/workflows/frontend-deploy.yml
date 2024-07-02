@@ -93,15 +93,18 @@ jobs:
           password: ${{ secrets.DOCKER_TOKEN }}
 
       - name: Set permissions for private key
-        env:
-          PRIVATE_KEY: ${{ secrets.AWS_PRIVATE_KEY }}
-          USER_NAME: swissiexe
-          HOSTNAME: 3.94.101.168
         run: |
-          ssh -i "./key/GitHubActionsFrontendPrivetKey.pem" ec2-user@ec2-3-94-101-168.compute-1.amazonaws.com'
+          chmod 600 ./library/key/GitHubActionsFrontendPrivetKey.pem
+          ssh-keyscan -H 3.94.101.168 >> ~/.ssh/known_hosts
 
-              sudo docker pull ${{ secrets.DOCKER_USERNAME }}/libraryfrontend:${{ needs.build-and-push-to-docker-hub.outputs.commit-hash }}-${{ needs.build-and-push-to-docker-hub.outputs.timestamp }} &&
-              sudo docker stop cddemo || true &&
-              sudo docker rm cddemo || true &&
-              sudo docker run -d --name cddemo -p 80:3000 ${{ secrets.DOCKER_USERNAME }}/libraryfrontend:${{ needs.build-and-push-to-docker-hub.outputs.commit-hash }}-${{ needs.build-and-push-to-docker-hub.outputs.timestamp }}
-              '
+      - name: Deploy to EC2
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          COMMIT_HASH: ${{ needs.build-and-push-to-docker-hub.outputs.commit-hash }}
+          TIMESTAMP: ${{ needs.build-and-push-to-docker-hub.outputs.timestamp }}
+        run: |
+          ssh -i ./library/key/GitHubActionsFrontendPrivetKey.pem ec2-user@3.94.101.168 '
+            sudo docker pull $DOCKER_USERNAME/libraryfrontend:$COMMIT_HASH-$TIMESTAMP &&
+            sudo docker stop cddemo || true &&
+            sudo docker rm cddemo || true &&
+            sudo docker run -d --name cddemo -p 80:3000 $DOCKER_USERNAME/libraryfrontend:$COMMIT_HASH-$TIMESTAMP
