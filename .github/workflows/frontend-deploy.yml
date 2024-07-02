@@ -112,8 +112,6 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i private_key "${USER_NAME}@${HOSTNAME}" '
             sudo yum install docker -y
             sudo systemctl start docker
-            sudo docker pull $DOCKER_USERNAME/libraryfrontend:${{ needs.build-and-push-to-docker-hub.outputs.commit-hash }}-${{ needs.build-and-push-to-docker-hub.outputs.timestamp }}
-            sudo docker stop libraryfrontend || true
-            sudo docker rm libraryfrontend || true
-            sudo docker run -p 80:3000 swissiexe/libraryfrontend:${{ needs.build-and-push-to-docker-hub.outputs.commit-hash }}-${{ needs.build-and-push-to-docker-hub.outputs.timestamp }}
+            sudo docker rm $(docker ps -aq)
+            sudo docker run -dp 8000:3000 --name test-app-pls-work ${{ needs.build-and-push-to-docker-hub.outputs.commit-hash }}-${{ needs.build-and-push-to-docker-hub.outputs.timestamp }}
           '
