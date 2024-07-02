@@ -9,26 +9,33 @@ jobs:
   deploy-to-ecs:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
-      - name: Deploy to EC2s
+      - name: Set up SSH key
+        run: |
+          echo "${{ secrets.AWS_PRIVATE_KEY }}" > private_key
+          chmod 600 private_key
+
+      - name: Verify SSH connection
+        run: |
+          ssh -i private_key -o StrictHostKeyChecking=no ${EC2_USERNAME}@${EC2_URL} echo "SSH connection successful"
+
+      - name: Deploy to EC2
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           COMMIT_HASH: ${{ needs.build-and-push-to-docker-hub.outputs.commit-hash }}
           TIMESTAMP: ${{ needs.build-and-push-to-docker-hub.outputs.timestamp }}
-          EC2_SSH_PRIVATE_KEY: ${{ secrets.AWS_PRIVATE_KEY }}
-          EC2_URL: 3.94.101.168
-          EC2_USERNAME: swissiexe
         run: |
-          echo "${EC2_SSH_PRIVATE_KEY}" > private_key
-          chmod 600 private_key
-          ssh -o StrictHostKeyChecking=no -i private_key ${EC2_USERNAME}@${EC2_URL} << EOF
-          sudo docker pull ${DOCKER_USERNAME}/libraryfrontend:${COMMIT_HASH}-${TIMESTAMP}
-          sudo docker stop cddemo || true
-          sudo docker rm cddemo || true
-          sudo docker run -d --name cddemo -p 80:3000 ${DOCKER_USERNAME}/libraryfrontend:${COMMIT_HASH}-${TIMESTAMP}
+          ssh -i private_key -o StrictHostKeyChecking=no ${EC2_USERNAME}@${EC2_URL} << 'EOF'
+            sudo docker pull $DOCKER_USERNAME/libraryfrontend:${COMMIT_HASH}-${TIMESTAMP}
+            sudo docker stop cddemo || true
+            sudo docker rm cddemo || true
+            sudo docker run -d --name cddemo -p 80:3000 $DOCKER_USERNAME/libraryfrontend:${COMMIT_HASH}-${TIMESTAMP}
           EOF
